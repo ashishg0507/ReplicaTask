@@ -1,0 +1,905 @@
+<div class="registration-wrapper-main">
+  <!-- Interactive Background Circles -->
+  <div class="bg-decorations">
+    <div class="decor-striped-circle"></div>
+    <div class="decor-green-circle-1"></div>
+    <div class="decor-green-circle-2"></div>
+    <div class="decor-green-circle-3"></div>
+    <div class="decor-orange-circle-small"></div>
+    <div class="decor-ripple-left"></div>
+    <div class="decor-ripple-right"></div>
+  </div>
+
+  <div class="content-container">
+    <h1 class="main-title" *ngIf="currentStep() !== 0.5">Registration</h1>
+    <h1 class="main-title" *ngIf="currentStep() === 0.5" style="color: var(--primary-green); font-weight: 700; font-size: 28px; margin-top: 10px; margin-bottom: 24px;">Terms and Conditions</h1>
+    
+    <!-- STEPPER HEADER (Dynamic 5 Circles) - Only shown if not on Success screen and not on Terms -->
+    <div class="stepper-container" *ngIf="currentStep() <= 4 && currentStep() !== 0.5">
+      <div class="stepper-line-bg"></div>
+      <div class="stepper-line-active" [style.width.%]="
+        currentStep() <= 0.5 ? 0 :
+        currentStep() === 1 ? 25 :
+        currentStep() === 2 ? 50 :
+        currentStep() === 3 ? 75 : 100
+      "></div>
+      
+      <!-- Circle 1: Verification -->
+      <div class="step-circle-wrapper">
+        <div class="step-circle" 
+          [class.active]="currentStep() <= 0.5" 
+          [class.completed]="currentStep() > 0.5">
+          <span class="circle-num" *ngIf="currentStep() <= 0.5"></span>
+          <span class="circle-check" *ngIf="currentStep() > 0.5">✓</span>
+        </div>
+      </div>
+
+      <!-- Circle 2: Personal Details -->
+      <div class="step-circle-wrapper">
+        <div class="step-circle" 
+          [class.active]="currentStep() === 1" 
+          [class.completed]="currentStep() > 1">
+          <span class="circle-num" *ngIf="currentStep() <= 1"></span>
+          <span class="circle-check" *ngIf="currentStep() > 1">✓</span>
+        </div>
+      </div>
+
+      <!-- Circle 3: Address & Location -->
+      <div class="step-circle-wrapper">
+        <div class="step-circle" 
+          [class.active]="currentStep() === 2" 
+          [class.completed]="currentStep() > 2">
+          <span class="circle-num" *ngIf="currentStep() <= 2"></span>
+          <span class="circle-check" *ngIf="currentStep() > 2">✓</span>
+        </div>
+      </div>
+
+      <!-- Circle 4: Identification & Security -->
+      <div class="step-circle-wrapper">
+        <div class="step-circle" 
+          [class.active]="currentStep() === 3" 
+          [class.completed]="currentStep() > 3">
+          <span class="circle-num" *ngIf="currentStep() <= 3"></span>
+          <span class="circle-check" *ngIf="currentStep() > 3">✓</span>
+        </div>
+      </div>
+
+      <!-- Circle 5: Review -->
+      <div class="step-circle-wrapper">
+        <div class="step-circle" 
+          [class.active]="currentStep() === 4"
+          [class.completed]="currentStep() === 5">
+          <span class="circle-num" *ngIf="currentStep() < 4"></span>
+          <span class="circle-check" *ngIf="currentStep() >= 4">✓</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN REGISTRATION CARD CONTAINER -->
+    <div class="registration-card" 
+      [class.wide-card]="currentStep() === 0.5 || currentStep() === 4 || currentStep() === 5"
+      [class.terms-card]="currentStep() === 0.5">
+      
+      <!-- ============================================== -->
+      <!-- STEP 1: MOBILE ENTRY VIEW                      -->
+      <!-- ============================================== -->
+      <div *ngIf="currentStep() === 0" [formGroup]="getActiveFormGroup()" class="form-step-container">
+        <h2 class="card-title">Registration</h2>
+        <p class="card-subtitle orange-text">Enter your mobile number to register.</p>
+
+        <div class="country-mobile-row">
+          <!-- Country code select dropdown -->
+          <div class="floating-input-group country-code-group" [class.has-error]="isFieldInvalid('step1_mobile', 'countryCode')">
+            <label>Country code *</label>
+            <select formControlName="countryCode">
+              <option *ngFor="let item of regService.countryCodes" [value]="item.code">{{ item.code }}</option>
+            </select>
+            <div class="field-error-message" *ngIf="isFieldInvalid('step1_mobile', 'countryCode')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" stroke-linecap="round" />
+              </svg>
+              {{ getFieldError('step1_mobile', 'countryCode') }}
+            </div>
+          </div>
+
+          <!-- Mobile Number input -->
+          <div class="floating-input-group mobile-number-group" [class.has-error]="isFieldInvalid('step1_mobile', 'mobileNumber')">
+            <label>Mobile Number *</label>
+            <input type="text" formControlName="mobileNumber" placeholder="XXX-XXX-YYYY" />
+            <div class="field-error-message" *ngIf="isFieldInvalid('step1_mobile', 'mobileNumber')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" stroke-linecap="round" />
+              </svg>
+              {{ getFieldError('step1_mobile', 'mobileNumber') }}
+            </div>
+          </div>
+        </div>
+
+        <p class="field-hint">You will receive a verification code on your mobile phone</p>
+
+        <div class="card-buttons-group">
+          <button class="btn-cancel half-width" type="button">Cancel</button>
+          <button class="btn-primary half-width" type="button" (click)="sendVerificationCode()">Send Code</button>
+        </div>
+      </div>
+
+      <!-- ============================================== -->
+      <!-- STEP 1.1: OTP ENTRY VIEW                        -->
+      <!-- ============================================== -->
+      <div *ngIf="currentStep() === 0.1" [formGroup]="getActiveFormGroup()" class="form-step-container">
+        <h2 class="card-title">Registration</h2>
+
+        <div class="form-fields-container vertical-inputs">
+          <!-- Verification code input -->
+          <div class="floating-input-group" [class.has-error]="isFieldInvalid('step1_mobile', 'verificationCode')">
+            <label>Verification Code *</label>
+            <input type="text" formControlName="verificationCode" placeholder="Enter 6-digit OTP" maxlength="6" />
+            <div class="field-error-message" *ngIf="isFieldInvalid('step1_mobile', 'verificationCode')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" stroke-linecap="round" />
+              </svg>
+              {{ getFieldError('step1_mobile', 'verificationCode') }}
+            </div>
+          </div>
+
+          <!-- Referral code horizontal group with Clear button -->
+          <div class="referral-row">
+            <div class="floating-input-group referral-input">
+              <label>Referral Code</label>
+              <input type="text" formControlName="referralCode" placeholder="Optional" />
+            </div>
+            <button class="btn-secondary btn-clear" type="button" (click)="clearReferralCode()">Clear</button>
+          </div>
+        </div>
+
+        <p class="verification-status-msg">Verification code successfully sent.</p>
+
+        <div class="actions-stack">
+          <button class="btn-primary full-width margin-bottom-sm" type="button" (click)="verifyCode()">Verify Code</button>
+          
+          <p class="timer-countdown-text">
+            <span *ngIf="otpTimer() > 0">You can request verification code again in {{ otpTimer() }} seconds.</span>
+            <a href="javascript:void(0)" class="resend-code-link" *ngIf="otpTimer() === 0" (click)="resendCode()">Resend Verification Code</a>
+          </p>
+
+          <button class="btn-cancel full-width" type="button" (click)="goBack()">Cancel</button>
+        </div>
+      </div>
+
+      <!-- ============================================== -->
+      <!-- STEP 1.5: TERMS & CONDITIONS VIEW              -->
+      <!-- ============================================== -->
+      <div *ngIf="currentStep() === 0.5" class="form-step-container wide-step">
+        
+        <div class="terms-scrollable-container">
+          <p class="terms-p bold-terms">PLEASE READ THESE TERMS AND CONDITIONS CAREFULLY BEFORE ACCEPTING THEM. THESE TERMS AND CONDITONS APPLY TO ALL MONIES AND WAGERS ACCEPTED BY SUPREME VENTURES GAMING LIMITED, A WHOLLY OWNED SUBSIDIARY OF SUPREME VENTURES LIMITED (“US”) AND ALL SERVICES OFFERED BY US. THE TERMS AND CONDITIONS SHALL CONSTITUTE A CONTRACT OF WAGER BETWEEN YOU AND US. WE WILL NOT FILE OUR CONTRACT WITH YOU, SO PLEASE PRINT THESE TERMS AND CONDITIONS FOR YOUR RECORDS, ALONG WITH THE GAME RULES AND ANY OTHER CORRESPONDENCE RELATING TO YOUR USE OF OUR SERVICES. THESE TERMS AND CONDITIONS ARE SUBJECT TO CHANGE (AS SET OUT BELOW).</p>
+          
+          <p class="terms-p">These Terms and Conditions were last updated on <span class="green-highlight">December 6, 2023</span>. All previous terms and conditions are cancelled and void.</p>
+          
+          <h3 class="terms-section-title">CONTENT</h3>
+          
+          <h4 class="terms-subsection-title">Material Terms summary</h4>
+          <ol class="terms-list">
+            <li>To use our services, you must register and open a customer electronic account with us. By registering a customer electronic account with Supreme Games, you will enter into a legally binding agreement with us which incorporates the General Terms and Conditions, the rules for each of the products and services that we offer and any applicable third-party terms and conditions in respect of the use of their software. (See Section 1).</li>
+            <li>You must be 18 years of age or older and meet the other eligibility and verification criteria to use our services. (See Sections 3, 5 and 6).</li>
+            <li>We collect and may use Your personal information in accordance with our Privacy Notice. (See Section 4).</li>
+            <li>You are only permitted to register one (1) customer electronic account with us. You can apply credits to the customer electronic account using a supported electronic payment method or at assigned Retail Locations.</li>
+            <li>We will not tolerate any irregularity in the registration of your account, any unlawful activity, or cheating, and we may suspend and/or close Your customer electronic account withholding any or all winnings and share information (together with Your identity) with the police and other appropriate authorities if we have reason to believe you have or may be taking part in any irregular registration, unlawful activity or cheating. Where we close or suspend a customer’s electronic account for any such apparent irregular registration, unlawful activity or cheating, the customer may be liable for all claims, losses, liabilities, damages, costs and expenses which we incur in connection with the unlawful activity, dishonesty or criminal act. (See Section 14).</li>
+            <li>We will not be responsible for any errors or events outside of our control, which may result in any bets or wagers being declared void. (See Sections 16).</li>
+            <li>Save in respect of any winnings lawfully due to You, our liability for fraud, death or personal injury or Your statutory rights, our maximum liability to You is limited to the greater of:
+              <ul style="list-style-type: circle; padding-left: 20px; margin-top: 6px; margin-bottom: 6px;">
+                <li>where such liability relates to a specific bet or wager, the value of such bet or wager paid by You; or</li>
+                <li>where such liability relates to the misapplication of funds in Your Customer electronic account, the amount that has been lost or misplaced; or</li>
+              </ul>
+            </li>
+            <li>Any complaints or disputes will be handled by our Customer Support Team with a right to appeal to Management.</li>
+          </ol>
+
+          <h3 class="terms-section-title">Supreme Ventures Gaming Limited Terms & Conditions General</h3>
+          
+          <h4 class="terms-subsection-title">1. Parties</h4>
+          <p class="terms-p">The Terms and Conditions are a binding legal agreement between you and Supreme Ventures Gaming Limited, a company registered under the Laws of Jamaica and a wholly owned subsidiary of Supreme Ventures Limited with its registered offices located at 9A Retirement Crescent, Kingston 5 in the Parish of Saint Andrew, Jamaica, West Indies. Supreme Ventures Gaming Limited is licensed and regulated by the Betting, Gaming & Lotteries Commission.</p>
+          <p class="terms-p">References in the Terms and Conditions to "Supreme Games", "us", "our" or "we" are references to Supreme Ventures Gaming Limited. For further contact details please see Section 20 of these Terms and Conditions.</p>
+          <p class="terms-p">References to "You" and "Your" in the Terms and Conditions are to you as the end user of the Services.</p>
+          <p class="terms-p">By registering a customer electronic account with Supreme Games (see Section 4 (Registering and Opening an Customer electronic account)) and accepting Supreme Games terms, you will enter into a legally binding agreement which incorporates these general terms and conditions ("Terms and Conditions") and the rules for each of the products and services that we offer ("Game Rules"), the relevant laws governing each product and service offered and any applicable third party terms and conditions in respect of the use of their software ("Third Party Terms"). The Terms and Conditions, the Game Rules and the Third-Party Terms are together referred to as the "Terms and Conditions". You agree to the use of electronic communications in order to enter into these Terms and Conditions and you waive any rights or requirements under applicable laws or regulations in any jurisdiction that requires an original (non-electronic) signature, to the extent permitted under applicable law.</p>
+          <p class="terms-p">You should read and will be bound by the full Terms and Conditions when using our Services.</p>
+          <p class="terms-p">The products and services that Supreme Games offers are together referred to as the "Services". Your agreement under these Terms and Conditions is with us for all the Services that you use.</p>
+          <p class="terms-p">The Game Rules for each of our products and services can be found by clicking the designated hyperlinks in the Supreme Games application.</p>
+          <p class="terms-p">You must provide all equipment and software necessary to connect to the Service, including, but not limited to, a Mobile Device that is suitable to connect with and use the Service. You are responsible for any fees, including, but not limited to, banking fees, or other services fees, Internet connection or data usage fees, including, without limitation, SMS/MMS text usage fees, that you incur when accessing the Service.</p>
+
+          <h4 class="terms-subsection-title">2. Changes to Terms and Conditions</h4>
+          <p class="terms-p">The Terms and Conditions govern your use of the Services and supersede any and all prior agreements between you and us in respect of the same.</p>
+          <p class="terms-p">We reserve the right to modify these Terms and Conditions from time to time with or without notice (including to comply with applicable law or a change in our regulatory requirements). If we modify these Terms and Conditions from time to time for a number of reasons you are advised to review the Terms on a regular basis. Your continued use of the Services following such notification will be deemed binding acceptance of the changes. If any change is unacceptable to you, you should stop using our Services. It is your responsibility to review the Terms and Conditions and any amendments to them each time you use the Services.</p>
+
+          <h4 class="terms-subsection-title">3. Registering and opening a customer electronic account</h4>
+          <p class="terms-p">To use our Services, You need to register and open a customer electronic account with us ("Customer electronic account"). You can open a customer electronic account by clicking the "Register" tab on the home page of the Supreme Games App. There are no set-up charges for opening a customer electronic account with us. All Applicants must be 18 years or older and of legal capacity to place a bet/wager or register with Supreme Games. When you open your customer electronic account, You will be asked to provide personal information, including (but not limited to) Your first and last name, postal address, email address, date of birth and telephone number. You shall ensure that the details provided by you at registration are accurate and kept up to date. We reserve the right to ask for proof of age from any customer and suspend their customer electronic account until satisfactory documentation is provided. You can change some of your details at any time by editing your customer electronic account profile using the facility provided on our App. For further information about our collection and use of your personal information, please refer to our Privacy Notice.</p>
+          <p class="terms-p">When opening a Supreme Games customer electronic account with us, you must fulfil our eligibility criteria and pass our anti-money laundering and verification checks (the “Requirements”) as described in Section 5 (Eligibility) and Section 6 (Verification) below. You must at all times continue to satisfy the Requirements, while you have an active customer electronic account with us.</p>
+          <p class="terms-p">You can only register for one (1) Supreme Games customer electronic account with us, which can then be used across all of our Services. If we identify that you have acted unlawfully or dishonestly in opening multiple/duplicate customer electronic accounts, we reserve the right to suspend or withhold any winnings/funds that have accumulated on those customer electronic accounts. We also reserve the right to close any and all customer electronic accounts.</p>
+          <p class="terms-p">You must provide us with accurate information in relation to your Supreme Games customer electronic account. It is your responsibility to inform us of any changes to your personal details which may impact the use of your Customer electronic account (e.g. a change of address). If any of these details change, please notify us using: (1) the facility provided on our App; or (2) via the Customer Support Team.</p>
+          <p class="terms-p">We reserve the right to refuse to open a Supreme Games customer electronic account for any reason, including failure to meet the Requirements. Provided that your registration application complied with our Terms and Conditions, you have verified your identity and no bets or wagers have been placed, we will send you any sum provided on deposit in respect of the failed customer electronic account by the method of payment you used to make the relevant deposit. If any bets or wagers have been placed, we reserve the right to void all such bets or wagers and return the deposit.</p>
+          <p class="terms-p">Any bets or wagers placed via your Supreme Games customer electronic account must be for your own benefit and not for the benefit of any third party.</p>
+
+          <h4 class="terms-subsection-title">4. Information we collect about you and how it is used</h4>
+          <p class="terms-p">We process information about you in accordance with our Privacy Notice. Our Privacy Notice forms part of these Terms and Conditions and contains details on the types of information we collect and what we do with that information, which includes who it may be shared with and why.</p>
+          <p class="terms-p">We are entitled to share the information we hold on you which includes personal data and betting history with regulators, and other bodies, including the police, and law enforcement bodies in order to investigate fraud, money laundering or other gaming integrity issues and to comply with our regulatory duties.</p>
+
+          <h4 class="terms-subsection-title">5. Eligibility</h4>
+          <p class="terms-p">You must be eighteen (18) years of age or older to use the Supreme Games Services. By registering with us, you confirm that you are aged eighteen (18) or older. Underage gaming is a criminal offence.</p>
+          <p class="terms-p">Access to certain Services may not be legal for residents of, or persons located in, certain countries. We do not intend that the Services be used by persons in countries in which such activities are illegal. Our Services do not constitute an offer, solicitation or invitation by us for the use of, or subscription to, betting, gaming or other services in any jurisdiction in which such activities are prohibited by law.</p>
+          <p class="terms-p">If you access any of the Services from a country other than the country specified as your country of residence in the customer registration procedure, it is your responsibility to check that accessing and using the Services are not prohibited and/or restricted by local laws. We accept no liability if your use of our Services is in contravention of the laws of the country in which you are located.</p>
+          <p class="terms-p">If we discover or reasonably believe that you are accessing the services in a country in which the use of the Services is not legal, we shall be entitled to immediately suspend or close your Customer electronic account and shall not be liable for any losses incurred as a result of such suspension or closure. In the case of closure, any balance on your Customer electronic account on the date of closure will be refunded to you as soon as it is practicable for us to do so.</p>
+
+          <h4 class="terms-subsection-title">6. Verification</h4>
+          <p class="terms-p">We reserve the right to ask for information including but not limited to proof of age and/or address from you, and we may prevent, restrict or suspend you from opening a customer electronic account until you provide the requested documents.</p>
+          <p class="terms-p">By accepting the Terms and Conditions, You hereby authorize us, directly or through third parties, to make any inquiries we deem necessary to verify your identity, protect against fraud or other financial crime, and/or comply with our legal obligations under various anti-money laundering ("AML") obligations by using all of the details You provide when registering or changing your customer electronic account details. In particular, we may verify that you are 18 (eighteen) years of age or older and that you are a resident in the country in which you say you are resident. You agree to provide us with any information we may reasonably need in relation to such checks. You further agree that Supreme Ventures Gaming Limited shall make checks with such third parties to verify your information and in no event shall Supreme Ventures Gaming Limited be held liable for any breaches of Your privacy and data protection rights by any of the third parties so engaged.</p>
+          <p class="terms-p">We may supply the information that you have given us to authorized credit reference agencies, who may check the details we provide against any databases (public or private) to which they have access and may keep a record of that check. We may share information with credit reference and fraud prevention agencies for use in credit decisions, identification checks and for fraud detection and prevention purposes. You agree that we may process, use, record and disclose the personal information which you provide in connection with your registration in accordance with our Privacy Notice, and that such personal data may be recorded by us or the credit reference agencies.</p>
+          <p class="terms-p">As well as the other checks we may undertake, You may be required to provide proof of identity and /or proof of address to assist us with verification. If requested by us, You will need to send us a copy of your passport, driver's licence, birth certificate or other appropriate proof of address documentation for these purposes. These documents must be sent to us at: (1) Supreme Ventures Gaming Limited, 9A Retirement Crescent, Kingston 5, Saint Andrew, Jamaica, West Indies; (2) email via our online submit service at customer.service@svlgrp.com</p>
+          <p class="terms-p">We reserve the right to request any documentation reasonably required in order to meet our legal and regulatory requirements or comply with our internal fraud prevention procedures, should circumstances dictate.</p>
+
+          <h4 class="terms-subsection-title">7. User ID and PIN</h4>
+          <p class="terms-p">When you register with us, your User ID will be your telephone number and you will be able to choose a unique PIN for your customer electronic account. If you wish to change your PIN, You can do so by clicking the customer electronic accounts tab on the mobile application.</p>
+          <p class="terms-p">You may not in any circumstances nominate or allow any person to be an authorized user of your customer electronic account. It is Your responsibility to ensure that you do not reveal your ID and Password to anyone else. We shall be entitled to assume that all bets or wagers placed when your ID and Password have been entered correctly are valid and made by You, whether or not such transactions were authorized by You. We shall not be liable for any claims in the event that you disclose Your ID and Password to anyone else or where Your negligence or deliberate act has contributed to such third-party access to Your Customer electronic account.</p>
+          <p class="terms-p">It is Your responsibility to maintain the confidentiality and security of Your customer electronic account information, ID and PIN. If young persons (minors) are sharing or have access to your devices, You may wish to install parental control software. You should change Your PIN on a regular basis. You should notify us of any unauthorized use of Your customer electronic account as soon as You suspect it or otherwise become aware of it.</p>
+          <p class="terms-p">If you repeatedly enter your PIN incorrectly, Your Customer electronic account will be locked for security purposes. If You lose or forget your ID and/or PIN You can retrieve the details or if You need to, unlock your customer electronic account by contacting our Customer Support Team by telephone, and subject to sufficient security and verification checks we will reset Your ID and/or PIN for You. If You suspect that someone else has obtained Your ID and PIN, You must contact our Customer Support Team immediately on (876)- 754-6526.</p>
+
+          <h4 class="terms-subsection-title">8. Winnings</h4>
+          <p class="terms-p">Subject to these Terms and Conditions, we will credit your customer electronic account with your winnings as soon as results are made final in the system.</p>
+          <p class="terms-p">The maximum cash aggregate amount You can withdraw on any one wager is Nine Hundred and Ninety-Nine Thousand Jamaican Dollars (JM$999,999.00) and any amounts over this limit will be paid via cheque or bank transfer.</p>
+          <p class="terms-p">The maximum payout will be dependent on the game that you have played.</p>
+          <p class="terms-p">We reserve the right to suspend the payment of winnings in the event of the occurrence of an event outside our control (see Section 16 Events Outside our Control). We will pay you any winnings due to you as soon as reasonably practicable after the relevant event outside our control has ceased.</p>
+          <p class="terms-p">If we credit winnings to your customer electronic account in error, those funds are not available for use and we will void any transactions involving such funds. We reserve the right to, at any time, withdraw the relevant amount from your customer electronic account and/or reverse the transaction.</p>
+          <p class="terms-p">You are solely responsible for safeguarding and protecting your winning ticket information. We will not be held responsible any for loss, theft, or fraud arising from your failure to secure your winning ticket information.</p>
+          <p class="terms-p">For the avoidance of doubt, where the value of your winnings require you to visit our Retail Location to claim same, failure to do so within 90 days will result in your winnings being paid to the Government pursuant to the relevant law(s) [unclaimed winnings].</p>
+          <p class="terms-p">Any sum representing winnings from any game or product is eligible for immediate withdrawal and will be credited to the withdrawable account.</p>
+
+          <h4 class="terms-subsection-title">9. Use of Services</h4>
+          <p class="terms-p">We reserve the right to suspend, modify, remove and/or add a product to the Services at our reasonable discretion with immediate effect and without notice.</p>
+          <p class="terms-p">You must not misuse our App by knowingly introducing viruses, trojans, worms, logic bombs or other material which is malicious or technologically harmful. You must not attempt to gain unauthorized access to: our App; the servers on which our App is stored; or, any server computer or database connected to our App or mobile applications. We will report any such breach to the relevant law enforcement authorities, and we will co-operate with those authorities by disclosing your identity to them.</p>
+          <p class="terms-p">You agree that you will not use the Services in any way that may lead to the encouragement, procurement or carrying out of any criminal or unlawful activity, or cause distress, harm or inconvenience to any other person.</p>
+          <p class="terms-p">You agree that you will not use the Services in any way other than for your personal use and for your own benefit. Any bets or wagers placed through your Supreme Games customer electronic account that are not for your own benefit are forbidden.</p>
+          <p class="terms-p">You agree not to give any indication that you are our agent.</p>
+          <p class="terms-p">The information which we or third parties provide (including results, statistics, fixture lists, odds and betting figures) on our App is for your personal use only and the distribution or commercial exploitation of such information by you is strictly prohibited. We do not give any commitment or warranty in relation to the uninterrupted provision of such information, its accuracy or the results obtained through its use. No information which we or third parties provide on our App is intended to amount to advice or recommendations and is provided for information purposes only. All bets are made at your own risk.</p>
+          <p class="terms-p">We do not guarantee which products will be available on our Services. The Services are provided on an 'as is' and 'as available' basis. Whilst we use reasonable efforts to ensure that our Services run smoothly, we cannot promise that the Services will be free from errors or omissions nor that they will be available uninterrupted and/or in a fully operating condition.</p>
+          <p class="terms-p">We will provide the Services with reasonable skill and care as described in these Terms and Conditions. We do not make any other promises about how the Services will be provided.</p>
+          <p class="terms-p">In order for you to use certain Services, it may be necessary to provide you with software provided by a third party. The provider of such software may require you to agree to additional terms and conditions governing the use of their products. If you do not accept those third-party terms and conditions, do not use the relevant third-party software. You shall not interfere with, modify or reverse engineer any software provided to you by us or any third party. We do not accept any liability in respect of any third-party software.</p>
+          <p class="terms-p">We receive commentaries, news feeds, scores and other content from a number of third parties, which may carry terms and conditions governing their use. We do not accept any liability in respect of such content. Where the Services link to third party websites, content and resources this does not constitute an endorsement by us of that third party’s website or their products or services and we do not accept any liability in respect of your use of such sites.</p>
+
+          <h4 class="terms-subsection-title">10. Placing a Bet or Wager</h4>
+          <p class="terms-p">You may only place a bet or wager up to the value of the cleared funds in your Supreme Ventures customer electronic account. We do not offer any credit. We reserve the right to void any bet or wager which we may have accepted by mistake when your Supreme Ventures customer electronic account did not have sufficient cleared funds.</p>
+          <p class="terms-p">The App only accepts bets or wagers made directly through it. Bets and wagers are not accepted by the App in any other way, including by email, post or fax, and will not be valid if received in such a way.</p>
+          <p class="terms-p">It is your responsibility to ensure that the details of your bet or wager are correct. Once a bet or wager has been confirmed by us, you may not cancel or change it.</p>
+          <p class="terms-p">Bets or wagers made via our web/mobile applications are not guaranteed unless You receive an on-screen receipt from us which is confirmation that the bet is accepted. The process for placing wagers may vary depending on the applicable Game Rules but in any event a wager will only be valid where you receive confirmation from us of the details of the wager and that the wager has been accepted.</p>
+
+          <h4 class="terms-subsection-title">11. Refusing Your Bet or Wager</h4>
+          <p class="terms-p">We reserve the right, acting reasonably, to refuse all or any part of a bet or wager, void any accepted bet or wager and withhold settlement if we have reason to believe:</p>
+          <ul class="terms-list" style="list-style-type: disc; padding-left: 20px; margin-bottom: 16px;">
+            <li>You have insufficient funds in your customer electronic account;</li>
+            <li>You are under 18 (eighteen) years of age;</li>
+            <li>You are involved in unlawful activity, money laundering, collusion, match rigging or cheating of any kind;</li>
+            <li>You are in a jurisdiction (or a resident of a jurisdiction) that renders the provision of our products to you or your use of them illegal;</li>
+            <li>You are in breach of the relevant Game Rules;</li>
+            <li>You are found to be using multiple Supreme Games customer electronic accounts;</li>
+            <li>You attempted to place a lottery game bet or wager during system downtime which between the hours of 2:00 a.m. to 6:00 a.m.;</li>
+            <li>You attempted to place a lottery game bet or wager during the draw break; or</li>
+            <li>a bet or wager may breach the governing rules of the relevant event in question or jeopardize the integrity of the sport or event in question.</li>
+          </ul>
+
+          <h4 class="terms-subsection-title">12. Unlawful Activity and cheating</h4>
+          <p class="terms-p">We will not tolerate any unlawful activity or cheating. If we consider in our reasonable discretion that you have: (1) dishonestly manipulated our Services or taken an unfair advantage of us or our Services; or (2) attempted to defraud us or any other customer or legal entity, we reserve the right to suspend and/or close Your customer electronic account withholding any or all winnings and share information (together with your identity) with the police and other appropriate authorities. A non-exhaustive list of what we consider to be irregular, unlawful activity or cheating is set out below:</p>
+          <ul class="terms-list" style="list-style-type: circle; padding-left: 20px; margin-bottom: 16px;">
+            <li>identity fraud;</li>
+            <li>payment fraud;</li>
+            <li>money laundering;</li>
+            <li>third party funding;</li>
+            <li>forgery;</li>
+            <li>using stolen or fraudulent payment details;</li>
+            <li>collusion with other individuals;</li>
+            <li>utilization of software to gain an advantage;</li>
+            <li>exploitation of loopholes within our software & functionality;</li>
+            <li>betting on fixed sporting events; or</li>
+            <li>insider information.</li>
+          </ul>
+          <p class="terms-p">You will not in any way interfere, interrupt, attempt to interrupt, or attempt to manipulate the operations of our Services or the normal play of any of our products. Failure to comply with this rule may lead to your exclusion from our Services, forfeiture of any winnings from such prohibited behaviour and to possible criminal and civil investigations. In particular, you will not use or attempt to use any artificial intelligence, automated players (bots) or player assistance software but will play personally via the interfaces provided by us only.</p>
+          <p class="terms-p">Collusion is strictly forbidden. Our system monitors card history, betting patterns, player history and gameplay, including all bets, for all customers, up to and including the last round of betting where applicable. You agree to cooperate fully with us in respect of such measures and to investigate any such activity.</p>
+          <p class="terms-p">If we reasonably consider that any of the events referred to in Sections 12.1 to 12.3 above may have occurred or are likely to occur we reserve the right to without notice:</p>
+          <ul class="terms-list" style="list-style-type: square; padding-left: 20px; margin-bottom: 16px;">
+            <li>Close or suspend Your customer electronic account; and/or</li>
+            <li>Withhold and/or retain any and all amounts which would otherwise have been paid or payable to You (Including without limitation any winnings or bonus amounts).</li>
+          </ul>
+          <p class="terms-p">If we close or suspend your customer electronic account for any of the reasons referred to above in this Section 12, you shall be liable for any and all claims, losses, liabilities, damages, costs and expenses incurred or suffered by us (together “Claim”) arising as a result of or in connection with your unlawful activity, dishonesty or criminal act and you agree to fully compensate us for any costs, charges or losses sustained or incurred by us (including any direct, indirect or consequential losses, any loss of profit and any loss of reputation) in respect of such Claims.</p>
+
+          <h4 class="terms-subsection-title">13. Remote Gaming</h4>
+          <p class="terms-p">You are gaming via an electronic form of communication and consequently you should be aware that:</p>
+          <ul class="terms-list" style="list-style-type: decimal; padding-left: 20px; margin-bottom: 16px;">
+            <li>You may be using a connection or equipment which is slower than such equipment used by others and this may affect your performance in time critical products; and</li>
+            <li>You may encounter system flaws, faults, errors or service interruption caused by unexpected flaws, faults or errors in the software, hardware or networks used to provide the Services. Where such flaws, faults or errors cause a product to be interrupted in circumstances where it cannot be restarted from exactly the same position without any detriment to you, we will take all reasonable steps as soon as practicable to remedy the problem.</li>
+          </ul>
+
+          <h4 class="terms-subsection-title">14. Closing Your customer electronic account</h4>
+          <p class="terms-p">You have the right to close your customer electronic account at any time. You should make a request to close your customer electronic account by telephone or in writing via e-mail, or letter; see Section 20 (Contact Us) for details. We will respond within a reasonable time. You remain responsible for activities using your customer electronic account until it is closed. Upon our confirmation of the closure of your customer electronic account, we will notify you and provided that you have complied with these Terms and Conditions, send you the sum on deposit in your customer electronic account by a method of payment determined by us. We may at any time offset any positive balance on your customer electronic account against any amount owed by you to us (including under a duplicate customer electronic account) where, by way of an example, we re-settle any bets, wagers or payment errors. If you have any unsettled bets on your customer electronic account at the time of your customer electronic account closure, these bets will stand unless we advise you otherwise and you can contact us to collect any winnings arising from such bets.</p>
+          <p class="terms-p">We reserve the right, at our reasonable discretion, to close your customer electronic account and/or void any bets or stakes and/or withhold your customer electronic account balance and/or recover from your customer electronic account the amount of any affected pay-outs, bonuses and winnings and/or implement a permanent ban from our Services for the following reasons:</p>
+          <ul class="terms-list" style="list-style-type: disc; padding-left: 20px; margin-bottom: 16px;">
+            <li>We, acting in good faith, have reason to believe that you are in breach of a material provision of these Terms and Conditions including but not limited to Section 5 (Eligibility) in respect of underage gaming and the use of our Services in contravention of the laws of the country in which you are located and Section 12 (Unlawful Activity and Cheating);</li>
+            <li>We become aware that you have used or attempted to use the Services for the purposes of unlawful activity, collusion or unlawful or improper activity;</li>
+            <li>We become aware that you have played at any other online gaming App or services and, in connection with the same, are suspected of collusion (including in relation to charge-backs), cheating or unlawful or improper activity;</li>
+            <li>You fail to provide us with accurate information in relation to your customer electronic account;</li>
+            <li>We, acting in good faith, have reason to believe that you have opened or are using multiple customer electronic accounts;</li>
+            <li>Where we have taken the steps to void a bet or wager for one of the reasons set out in Section 12 (Refusing Your Bet or Wager) above, your actions leading to that shall be considered a breach of these Terms and Conditions and shall entitle us to close your customer electronic account;</li>
+            <li>You misuse our App;</li>
+            <li>We are required to do so by any regulatory authority or court;</li>
+            <li>We discover that you are accessing the Services in contravention of the laws of the country where you are located; or</li>
+            <li>You agree to compensate us for any costs, charges or losses sustained or incurred by us (including any direct, indirect or consequential losses, any loss of profit and any loss of reputation) arising where we close your customer electronic account in accordance with Section 14.2 above.</li>
+          </ul>
+
+          <h4 class="terms-subsection-title">15. Dormant Customer electronic accounts</h4>
+          <p class="terms-p">Please note that after a period of no less than twelve (12) months of customer electronic account inactivity we reserve the right to suspend customer electronic accounts. Notice via email or letter will be given at least thirty (30) days before the suspension is made. If after the twelve-month period you contact us seeking a refund of your customer electronic account balance (balance as at the point of customer electronic account suspension), we shall process such refund, subject to your compliance with these Terms and Conditions and subject to our legal and regulatory obligations.</p>
+          <p class="terms-p">Should your customer electronic account become dormant through lack of use, we will continue to contact you (where you have "opted-in") with promotional messages until such time as you instruct us to stop. However, we will also contact all customer electronic account holders periodically to advise of any customer electronic account balance.</p>
+          <p class="terms-p">In the event of your death, the funds in account will be held by us until claimed by your estate.</p>
+
+          <h4 class="terms-subsection-title">16. Events outside our control</h4>
+          <p class="terms-p">We are not responsible for any events beyond our reasonable control. Such events might include but not be limited to network failures, malfunctions to our systems or third-party systems, war, terrorist activity, riots, malicious damage, fire, flood, storm, nuclear accident or compliance with any new law or governmental order, rule, regulation or direction.</p>
+          <p class="terms-p">We may also suspend or cancel the Services or any part of the Services if, despite making reasonable efforts to do so, we are not able to provide that part of the Service to you as a result of events beyond our reasonable control.</p>
+
+          <h4 class="terms-subsection-title">17. Limitations and Exclusions</h4>
+          <p class="terms-p">Your access to and use of the Services is at your sole option, discretion and risk. We shall not be liable for any attempts by you to use the Services by methods, means or ways not intended by us. We will provide the Services with reasonable skill and care and substantially as described in the Terms of Use. We do not make any other promises or warranties regarding the Services or any products or services forming part of the Services, and hereby exclude (to the extent permitted by law) all implied warranties in respect of the same (including implied warranties as to satisfactory quality and/or fitness for your purpose). In particular, we do not warrant that the App will have uninterrupted availability or that it will be free of bugs, viruses or other errors.</p>
+          <p class="terms-p">Nothing in these Terms and Conditions is intended to: exclude or limit our liability for fraud or loss and damage resulting from our negligence in an amount not greater than JMD 1,000,000.00;</p>
+          <p class="terms-p">Except under Section 17.1.1 above and save in respect of any winnings lawfully due to you in accordance with Section 8 (Winnings) above, our maximum liability to You under these Terms and Conditions in relation to any one incident or series of related incidents is limited to, where such liability relates to a specific bet or wager, the value of such bet or wager paid by you.</p>
+          <p class="terms-p">Subject always to Sections 17.1.1 and 17.2 above, we will not be liable under the Terms and Conditions for any loss that could not have been reasonably expected by you and us at the time you register or at the time you enter into a transaction for Services, such as any loss of income, business or profits or any information which is lost or corrupted. We will not be liable for any damage or loss suffered or incurred by you as a result of:</p>
+          <ul class="terms-list" style="list-style-type: circle; padding-left: 20px; margin-bottom: 16px;">
+            <li>Any use of our Services in breach of these Terms and Conditions (including any use of our Services for commercial or business purposes);</li>
+            <li>Failures caused by the equipment you use to access our websites or mobile applications or failures in any network (including failures by your internet service provider);</li>
+            <li>Any incomplete, lost or delayed transactions (including as a result of technical failure);</li>
+            <li>Damage to your equipment (e.g. desktop, laptop, mobile, smartphone, tablet, games console or other internet-enabled device) or for any loss or corruption of data that results from your use of our websites or mobile and tablet applications (and we cannot and do not guarantee that any files that you download are free from viruses, contamination or destructive features);</li>
+            <li>The accuracy, completeness or currency of any information services provided by us or third parties (including but not limited to prices, times, results, live scores or general statistics);</li>
+            <li>Any loss whatsoever arising from your abuse or misuse of your customer electronic account or our Services;</li>
+            <li>Any failure on our part to observe any self-exclusion policies that we may have in place from time to time;</li>
+            <li>Any failure on our part to interact with you where we may have concerns about your activities;</li>
+            <li>Any event outside our control as set out in Section 16 (Events Outside Our Control);</li>
+            <li>Our closure or suspension of your customer electronic account in accordance with these Terms and Conditions; or</li>
+            <li>Theft or loss of your mobile device and your failure to take precautions to protect your customer electronic account and any funds/winnings thereon.</li>
+          </ul>
+          <p class="terms-p">You agree to compensate us for any costs, charges or losses sustained or incurred by us (including any direct, indirect or consequential losses, any loss of profit and any loss of reputation) arising directly from your unlawful activity, dishonesty or criminal act.</p>
+          <p class="terms-p">Without limiting any other rights or remedies available to us, we may at any time set off any positive balance in your customer electronic account against any amount owed to us by you.</p>
+
+          <h4 class="terms-subsection-title">18. Intellectual Property</h4>
+          <p class="terms-p">All intellectual property rights in our mobile application and all material and/or content made available on the Services (including but not limited to rights in the products and services offered, all code, software, animations, graphics, music, sound, photographs, video content or text, and the selection and arrangement thereof) or otherwise by us shall remain at all times our property or the property of our third party licensors.</p>
+          <p class="terms-p">The names, images, slogans and logos identifying us, our partners or third parties and our/their products and services contained in our mobile applications are proprietary marks and may not be reproduced or otherwise used without express permission.</p>
+          <p class="terms-p">Nothing contained in these Terms and Conditions shall be construed as conferring by implication any licence or right to use any trademark, patent, design right or copyright that belongs to us or any third party.</p>
+
+          <h4 class="terms-subsection-title">19. Promotions and offers</h4>
+          <p class="terms-p">From time to time we offer promotions and offers to new and existing customers. These promotions and offers will have their own additional terms and conditions.</p>
+          <p class="terms-p">Please note that the terms and conditions for a promotion or offer shall prevail in the event of any conflict between the General Terms and Conditions and the terms and conditions for a promotion or offer.</p>
+          <p class="terms-p">We reserve the right to amend the terms and conditions of or withdraw any promotion or offer at any time at our reasonable discretion.</p>
+          <p class="terms-p">Any funds designated as promotional bonuses are not eligible for withdrawal and will be credited to your account only for play.</p>
+
+          <h4 class="terms-subsection-title">20. Contact Us</h4>
+          <p class="terms-p">If You need to contact us, you can call us on (888)-SUPPORT (787-7678) from 7am until 7pm, 7 days a week, or email us using the form available on the website at <a href="http://www.supremeventures.com" target="_blank" class="green-highlight">www.supremeventures.com</a> , or write to us at 9A Retirement Crescent, Kingston 5, Saint Andrew, Jamaica, West Indies.</p>
+
+          <h4 class="terms-subsection-title">21. Miscellaneous</h4>
+          <p class="terms-p">If we need to notify you under these Terms and Conditions, we will do so by SMS or email to the email address registered to your customer electronic account.</p>
+          <p class="terms-p">We may wish to transfer our rights or obligations or sub-contract our obligations under these Terms and Conditions to another legal entity; you agree that we may do so. In the case of transfer only, after we notify you of the date on which we will transfer our rights and obligations under these Terms and Conditions to another legal entity, your only rights under or in connection with these Terms and Conditions will be against the new legal entity and not against us. As set out in Section 14.1, you may close your customer electronic account with us at any time.</p>
+          <p class="terms-p">These Terms and Conditions are personal to you. You may not transfer your rights or obligations under these Terms and Conditions to anyone else.</p>
+          <p class="terms-p">If you breach these Terms and Conditions and we take no action against you, we will still be entitled to use our rights and remedies in any other situation where you breach these Terms and Conditions.</p>
+          <p class="terms-p">If any part of these Terms and Conditions is disallowed or found to be ineffective by any court or regulator, the other provisions shall continue to apply.</p>
+          <p class="terms-p">These Terms and Conditions are not intended to give rights to anyone except you and us. This does not affect our right to transfer these Terms and Conditions under Section 21.2.</p>
+          <p class="terms-p">From time to time, the Company may in its sole discretion develop and provide Supreme Games App updates, which may include upgrades, bug fixes, patches and other error corrections and/or new features (collectively, including related documentation, “Updates”). Updates may also modify or delete in their entirety certain features and functionality. You agree that the Company has no obligation to provide any Updates or to continue to provide or enable any particular features or functionality. Based on your Mobile Device settings, when your Mobile Device is connected to the Internet either (i) the Application will automatically download and install all available Updates or (ii) you may receive notice of or be prompted to download and install available Updates.</p>
+          <p class="terms-p">You acknowledge and agree that the Application or portions thereof may not properly operate should you fail to promptly download and install all Updates. You further agree that all Updates will be deemed part of the Application and be subject to these Terms and Conditions of Use.</p>
+          <p class="terms-p">Certain features of the Application require communication with the Company’s servers, including, without limitation, the Application downloads and Updates, which may consume and exceed your service provider’s data or minute allowance limits. You acknowledge and agree that you are solely responsible for any charges incurred with your data/ mobile service provider as a result of the Application, including any overage and penalties assessed for exceeding the limits imposed by your service provider.</p>
+          <p class="terms-p">You are responsible for the cost of your Mobile Device and to ensure that your Mobile Device meets the system requirements of the Application, including obtaining periodic updates or upgrades from your Mobile Device service provider to continue using Application. WE DO NOT WARRANT OR GUARANTEE THAT THE APPLICATION WILL BE COMPATIBLE OR FUNCTION WITH ANY PARTICULAR MOBILE DEVICE, NOR DO WE WARRANT OR ACCEPT ANY LIABILITY FOR OPERATION OF THE MOBILE DEVICE USED TO ACCESS THE APPLICATION.</p>
+          <p class="terms-p">In entering this Contract you represent that, you have relied upon the advice of your Attorneys who are Attorneys of your choice concerning the legal consequences of this Contract; and the terms of this Contract have been completely read and explained to you by your Attorney; or you were given the opportunity to consult with or obtain representation from an Attorney of your own selection, but elected to not do so and that the terms of this Contract are fully understood and voluntarily accepted by you.</p>
+
+          <h4 class="terms-subsection-title">22. Governing Law and Jurisdiction</h4>
+          <p class="terms-p">These Terms and Conditions are governed by and interpreted in accordance with the laws of Jamaica.</p>
+          <p class="terms-p">Unless otherwise specified in the Game Rules, disputes arising in connection with these Terms and Conditions shall be subject to the exclusive jurisdiction of the courts of Jamaica.</p>
+          <p class="terms-p">If any dispute or difference shall arise between the parties hereto touching anything herein contained the same shall be referred to the award of a single Arbitrator appointed by the President of the Jamaica Bar Association (“the President”). Either party can make an ex-parte application to the President for the appointment of an Arbitrator or the decision of the Arbitrator shall be binding on both parties.</p>
+
+          <h4 class="terms-subsection-title">23. Complaints</h4>
+          <p class="terms-p">If a dispute arises in relation to a bet or wager placed, our transactions database will be the ultimate authority in such dispute.</p>
+          <p class="terms-p">If you have any cause to complain about anything that has happened as a consequence of your dealings with us, you should notify us by contacting the Customer Support Team at (888)-SUPPORT (787-7678) within two (2) weeks of the original transaction who will oversee the management of Your complaint. We will deal with your complaint as quickly as we reasonably can and shall, as necessary, request appropriate evidence from you for the purposes of settling your complaint.</p>
+
+          <h4 class="terms-subsection-title">24. Additional conditions for telephone</h4>
+          <p class="terms-p">In the interests of customer and staff protection, to assist us in resolving queries or for training purposes, any telephone call and/or online chat conversations between you and our Customer Support Team are recorded and any such recording or transcript (including the copyright) will remain our property.</p>
+
+          <h4 class="terms-subsection-title">25. Direct Marketing</h4>
+          <p class="terms-p">You confirm that you agree to receive messages and notifications about our products and services. You have the right to withdraw your consent at any time. Our Privacy Notice provides further information on how to do so.</p>
+
+          <h4 class="terms-subsection-title">26. Deposit of Funds</h4>
+          <p class="terms-p">Any deposited funds that have not been utilized within seven (7) days of being deposited will be available for withdrawal on the 8th day.</p>
+          <div class="terms-buttons-group">
+            <button class="btn-outline-orange half-width" type="button" (click)="declineTerms()">Decline</button>
+            <button class="btn-primary half-width" type="button" (click)="acceptTerms()">Accept Terms & Conditions</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================== -->
+      <!-- STEP 2: PERSONAL DETAILS VIEW                  -->
+      <!-- ============================================== -->
+      <div *ngIf="currentStep() === 1" [formGroup]="getActiveFormGroup()" class="form-step-container">
+        <h2 class="card-title">Personal Details</h2>
+
+        <!-- Avatar Uploader layout -->
+        <div class="avatar-uploader-container">
+          <div class="avatar-frame">
+            <div class="avatar-placeholder" *ngIf="!profilePreview()">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.5">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+            </div>
+            <img [src]="profilePreview()" class="avatar-image-preview" *ngIf="profilePreview()" alt="Profile Preview" />
+            
+            <label class="btn-avatar-add" for="avatar-file-input">
+              <span>+</span>
+            </label>
+          </div>
+          <input type="file" id="avatar-file-input" (change)="onFileSelected($event)" accept=".jpg,.jpeg,.png" style="display: none;" />
+          
+          <p class="avatar-file-hint">(Allowed document formats are : jpg, jpeg, png)</p>
+          <h4 class="avatar-label-title">Profile Picture</h4>
+        </div>
+
+        <!-- Form fields -->
+        <div class="form-fields-container vertical-inputs">
+          <div class="floating-input-group" [class.has-error]="isFieldInvalid('step2_personal', 'firstName')">
+            <label>First Name *</label>
+            <input type="text" formControlName="firstName" />
+            <div class="field-error-message" *ngIf="isFieldInvalid('step2_personal', 'firstName')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" stroke-linecap="round" />
+              </svg>
+              {{ getFieldError('step2_personal', 'firstName') }}
+            </div>
+          </div>
+
+          <div class="floating-input-group">
+            <label>Middle Name</label>
+            <input type="text" formControlName="middleName" />
+          </div>
+
+          <div class="floating-input-group" [class.has-error]="isFieldInvalid('step2_personal', 'lastName')">
+            <label>Last Name *</label>
+            <input type="text" formControlName="lastName" />
+            <div class="field-error-message" *ngIf="isFieldInvalid('step2_personal', 'lastName')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" stroke-linecap="round" />
+              </svg>
+              {{ getFieldError('step2_personal', 'lastName') }}
+            </div>
+          </div>
+
+          <div class="floating-input-group" [class.has-error]="isFieldInvalid('step2_personal', 'dateOfBirth')">
+            <label>Date of Birth *</label>
+            <input type="date" formControlName="dateOfBirth" class="datepicker-input" />
+            <div class="field-error-message" *ngIf="isFieldInvalid('step2_personal', 'dateOfBirth')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" stroke-linecap="round" />
+              </svg>
+              {{ getFieldError('step2_personal', 'dateOfBirth') }}
+            </div>
+          </div>
+
+          <div class="floating-input-group" [class.has-error]="isFieldInvalid('step2_personal', 'gender')">
+            <label>Gender *</label>
+            <select formControlName="gender">
+              <option value="" disabled>Select</option>
+              <option *ngFor="let item of regService.genders" [value]="item">{{ item }}</option>
+            </select>
+            <div class="field-error-message" *ngIf="isFieldInvalid('step2_personal', 'gender')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" stroke-linecap="round" />
+              </svg>
+              {{ getFieldError('step2_personal', 'gender') }}
+            </div>
+          </div>
+
+          <div class="floating-input-group" [class.has-error]="isFieldInvalid('step2_personal', 'countryOfBirth')">
+            <label>Country of Birth *</label>
+            <select formControlName="countryOfBirth">
+              <option value="" disabled>Select</option>
+              <option *ngFor="let item of regService.countries" [value]="item">{{ item }}</option>
+            </select>
+            <div class="field-error-message" *ngIf="isFieldInvalid('step2_personal', 'countryOfBirth')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" stroke-linecap="round" />
+              </svg>
+              {{ getFieldError('step2_personal', 'countryOfBirth') }}
+            </div>
+          </div>
+
+          <div class="floating-input-group" [class.has-error]="isFieldInvalid('step2_personal', 'nationality')">
+            <label>Nationality *</label>
+            <select formControlName="nationality">
+              <option value="" disabled>Select</option>
+              <option *ngFor="let item of regService.nationalities" [value]="item">{{ item }}</option>
+            </select>
+            <div class="field-error-message" *ngIf="isFieldInvalid('step2_personal', 'nationality')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" stroke-linecap="round" />
+              </svg>
+              {{ getFieldError('step2_personal', 'nationality') }}
+            </div>
+          </div>
+        </div>
+
+        <div class="card-buttons-group flex-buttons">
+          <button class="btn-cancel half-width" type="button" (click)="goBack()">Back</button>
+          <button class="btn-primary half-width" type="button" (click)="saveAndContinue()">Save and Continue</button>
+        </div>
+      </div>
+
+      <!-- ============================================== -->
+      <!-- STEP 3: ADDRESS DETAILS VIEW                   -->
+      <!-- ============================================== -->
+      <div *ngIf="currentStep() === 2" [formGroup]="getActiveFormGroup()" class="form-step-container">
+        <h2 class="card-title">Address & Location</h2>
+        <p class="card-subtitle">Please enter your geographical details.</p>
+
+        <div class="form-fields-container vertical-inputs">
+          <!-- Parish cascading select -->
+          <div class="floating-input-group" [class.has-error]="isFieldInvalid('step3_address', 'parish')">
+            <label>Parish *</label>
+            <select formControlName="parish" (change)="onParishChange($event)">
+              <option value="" disabled>Select Parish</option>
+              <option *ngFor="let item of parishesList()" [value]="item.name">{{ item.name }}</option>
+            </select>
+            <div class="field-error-message" *ngIf="isFieldInvalid('step3_address', 'parish')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" stroke-linecap="round" />
+              </svg>
+              {{ getFieldError('step3_address', 'parish') }}
+            </div>
+          </div>
+
+          <!-- Town cascading select -->
+          <div class="floating-input-group" [class.has-error]="isFieldInvalid('step3_address', 'town')">
+            <label>Town *</label>
+            <select formControlName="town" (change)="onTownChange($event)">
+              <option value="" disabled>Select Town</option>
+              <option *ngFor="let item of townsList()" [value]="item.name">{{ item.name }}</option>
+            </select>
+            <div class="field-error-message" *ngIf="isFieldInvalid('step3_address', 'town')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" stroke-linecap="round" />
+              </svg>
+              {{ getFieldError('step3_address', 'town') }}
+            </div>
+          </div>
+
+          <!-- District cascading select -->
+          <div class="floating-input-group" [class.has-error]="isFieldInvalid('step3_address', 'district')">
+            <label>District *</label>
+            <select formControlName="district">
+              <option value="" disabled>Select District</option>
+              <option *ngFor="let item of districtsList()" [value]="item">{{ item }}</option>
+            </select>
+            <div class="field-error-message" *ngIf="isFieldInvalid('step3_address', 'district')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" stroke-linecap="round" />
+              </svg>
+              {{ getFieldError('step3_address', 'district') }}
+            </div>
+          </div>
+        </div>
+
+        <div class="card-buttons-group flex-buttons">
+          <button class="btn-cancel half-width" type="button" (click)="goBack()">Back</button>
+          <button class="btn-primary half-width" type="button" (click)="saveAndContinue()">Save and Continue</button>
+        </div>
+      </div>
+
+      <!-- ============================================== -->
+      <!-- STEP 4: SECURITY & PIN DETAILS VIEW            -->
+      <!-- ============================================== -->
+      <div *ngIf="currentStep() === 3" [formGroup]="getActiveFormGroup()" class="form-step-container">
+        <h2 class="card-title">Identification & Security</h2>
+
+        <div class="form-fields-container vertical-inputs">
+          <!-- Document type selection -->
+          <div class="floating-input-group">
+            <label>Document Type *</label>
+            <select formControlName="documentType">
+              <option value="TRN">TRN (Tax Registration Number)</option>
+              <option value="NationalID">National ID Card</option>
+            </select>
+          </div>
+
+          <!-- TRN Input limit to 9 digits, numeric only -->
+          <div class="floating-input-group" [class.has-error]="isFieldInvalid('step4_security', 'trnNumber')">
+            <label>TRN / Document Number *</label>
+            <input type="text" formControlName="trnNumber" placeholder="Exactly 9 digits (numbers only)" maxlength="9" />
+            <div class="field-error-message" *ngIf="isFieldInvalid('step4_security', 'trnNumber')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" stroke-linecap="round" />
+              </svg>
+              {{ getFieldError('step4_security', 'trnNumber') }}
+            </div>
+          </div>
+
+          <!-- Expiration Date future date only -->
+          <div class="floating-input-group" [class.has-error]="isFieldInvalid('step4_security', 'expirationDate')">
+            <label>ID Expiration Date *</label>
+            <input type="date" formControlName="expirationDate" class="datepicker-input" />
+            <div class="field-error-message" *ngIf="isFieldInvalid('step4_security', 'expirationDate')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" stroke-linecap="round" />
+              </svg>
+              {{ getFieldError('step4_security', 'expirationDate') }}
+            </div>
+          </div>
+
+          <!-- Security Question 1 -->
+          <div class="floating-input-group" [class.has-error]="isFieldInvalid('step4_security', 'question1')">
+            <label>Security Question 1 *</label>
+            <select formControlName="question1">
+              <option value="" disabled>Select Question</option>
+              <option *ngFor="let item of regService.securityQuestions" [value]="item">{{ item }}</option>
+            </select>
+            <div class="field-error-message" *ngIf="isFieldInvalid('step4_security', 'question1')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" stroke-linecap="round" />
+              </svg>
+              {{ getFieldError('step4_security', 'question1') }}
+            </div>
+          </div>
+
+          <!-- Security Answer 1 -->
+          <div class="floating-input-group" [class.has-error]="isFieldInvalid('step4_security', 'answer1')">
+            <label>Security Answer 1 *</label>
+            <input type="text" formControlName="answer1" />
+            <div class="field-error-message" *ngIf="isFieldInvalid('step4_security', 'answer1')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" stroke-linecap="round" />
+              </svg>
+              {{ getFieldError('step4_security', 'answer1') }}
+            </div>
+          </div>
+
+          <!-- Security Question 2 -->
+          <div class="floating-input-group" [class.has-error]="isFieldInvalid('step4_security', 'question2')">
+            <label>Security Question 2 *</label>
+            <select formControlName="question2">
+              <option value="" disabled>Select Question</option>
+              <option *ngFor="let item of regService.securityQuestions" [value]="item">{{ item }}</option>
+            </select>
+            <div class="field-error-message" *ngIf="isFieldInvalid('step4_security', 'question2')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" stroke-linecap="round" />
+              </svg>
+              {{ getFieldError('step4_security', 'question2') }}
+            </div>
+          </div>
+
+          <!-- Security Answer 2 -->
+          <div class="floating-input-group" [class.has-error]="isFieldInvalid('step4_security', 'answer2')">
+            <label>Security Answer 2 *</label>
+            <input type="text" formControlName="answer2" />
+            <div class="field-error-message" *ngIf="isFieldInvalid('step4_security', 'answer2')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" stroke-linecap="round" />
+              </svg>
+              {{ getFieldError('step4_security', 'answer2') }}
+            </div>
+          </div>
+
+          <!-- PIN setup -->
+          <div class="floating-input-group" [class.has-error]="isFieldInvalid('step4_security', 'pin')">
+            <label>Account PIN (4 digits) *</label>
+            <input type="password" formControlName="pin" maxlength="4" placeholder="••••" />
+            <div class="field-error-message" *ngIf="isFieldInvalid('step4_security', 'pin')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" stroke-linecap="round" />
+              </svg>
+              {{ getFieldError('step4_security', 'pin') }}
+            </div>
+          </div>
+
+          <!-- Confirm PIN -->
+          <div class="floating-input-group" [class.has-error]="isFieldInvalid('step4_security', 'confirmPin')">
+            <label>Confirm PIN *</label>
+            <input type="password" formControlName="confirmPin" maxlength="4" placeholder="••••" />
+            <div class="field-error-message" *ngIf="isFieldInvalid('step4_security', 'confirmPin')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" stroke-linecap="round" />
+              </svg>
+              {{ getFieldError('step4_security', 'confirmPin') }}
+            </div>
+          </div>
+        </div>
+
+        <div class="card-buttons-group flex-buttons">
+          <button class="btn-cancel half-width" type="button" (click)="goBack()">Back</button>
+          <button class="btn-primary half-width" type="button" (click)="saveAndContinue()">Save and Continue</button>
+        </div>
+      </div>
+
+      <!-- ============================================== -->
+      <!-- STEP 5: REVIEW SCREEN VIEW                     -->
+      <!-- ============================================== -->
+      <div *ngIf="currentStep() === 4" class="form-step-container wide-step">
+        <h2 class="card-title text-center">Review Details</h2>
+        <p class="review-subtitle text-center">Verify all details are correct before submitting your registration.</p>
+
+        <!-- Structured Review Grid -->
+        <div class="review-grid">
+          <!-- Profile Pic Section -->
+          <div class="review-section review-avatar-section">
+            <h3 class="review-section-header">Profile Picture</h3>
+            <div class="review-avatar-wrapper">
+              <img [src]="profilePreview()" class="review-avatar-img" *ngIf="profilePreview()" alt="Profile Preview" />
+              <div class="review-avatar-placeholder" *ngIf="!profilePreview()">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#777777" stroke-width="1.5">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 1 Info -->
+          <div class="review-section">
+            <h3 class="review-section-header">Verification Info</h3>
+            <div class="review-row">
+              <span class="review-label">Country Code:</span>
+              <span class="review-value">{{ getFormValue('step1_mobile.countryCode') }}</span>
+            </div>
+            <div class="review-row">
+              <span class="review-label">Mobile Number:</span>
+              <span class="review-value">{{ getFormValue('step1_mobile.mobileNumber') }}</span>
+            </div>
+            <div class="review-row" *ngIf="getFormValue('step1_mobile.referralCode') !== 'N/A'">
+              <span class="review-label">Referral Code:</span>
+              <span class="review-value">{{ getFormValue('step1_mobile.referralCode') }}</span>
+            </div>
+          </div>
+
+          <!-- Step 2 Info -->
+          <div class="review-section">
+            <h3 class="review-section-header">Personal Info</h3>
+            <div class="review-row">
+              <span class="review-label">First Name:</span>
+              <span class="review-value">{{ getFormValue('step2_personal.firstName') }}</span>
+            </div>
+            <div class="review-row" *ngIf="getFormValue('step2_personal.middleName') !== 'N/A'">
+              <span class="review-label">Middle Name:</span>
+              <span class="review-value">{{ getFormValue('step2_personal.middleName') }}</span>
+            </div>
+            <div class="review-row">
+              <span class="review-label">Last Name:</span>
+              <span class="review-value">{{ getFormValue('step2_personal.lastName') }}</span>
+            </div>
+            <div class="review-row">
+              <span class="review-label">Date of Birth:</span>
+              <span class="review-value">{{ getFormValue('step2_personal.dateOfBirth') }}</span>
+            </div>
+            <div class="review-row">
+              <span class="review-label">Gender:</span>
+              <span class="review-value">{{ getFormValue('step2_personal.gender') }}</span>
+            </div>
+            <div class="review-row">
+              <span class="review-label">Country of Birth:</span>
+              <span class="review-value">{{ getFormValue('step2_personal.countryOfBirth') }}</span>
+            </div>
+            <div class="review-row">
+              <span class="review-label">Nationality:</span>
+              <span class="review-value">{{ getFormValue('step2_personal.nationality') }}</span>
+            </div>
+          </div>
+
+          <!-- Step 3 Info -->
+          <div class="review-section">
+            <h3 class="review-section-header">Address & Location</h3>
+            <div class="review-row">
+              <span class="review-label">Parish:</span>
+              <span class="review-value">{{ getFormValue('step3_address.parish') }}</span>
+            </div>
+            <div class="review-row">
+              <span class="review-label">Town:</span>
+              <span class="review-value">{{ getFormValue('step3_address.town') }}</span>
+            </div>
+            <div class="review-row">
+              <span class="review-label">District:</span>
+              <span class="review-value">{{ getFormValue('step3_address.district') }}</span>
+            </div>
+          </div>
+
+          <!-- Step 4 Info -->
+          <div class="review-section last-section">
+            <h3 class="review-section-header">Identification & Security</h3>
+            <div class="review-row">
+              <span class="review-label">Document Type:</span>
+              <span class="review-value">{{ getFormValue('step4_security.documentType') }}</span>
+            </div>
+            <div class="review-row">
+              <span class="review-label">TRN / Document Num:</span>
+              <span class="review-value">{{ getFormValue('step4_security.trnNumber') }}</span>
+            </div>
+            <div class="review-row">
+              <span class="review-label">Expiration Date:</span>
+              <span class="review-value">{{ getFormValue('step4_security.expirationDate') }}</span>
+            </div>
+            <div class="review-row">
+              <span class="review-label">Security Question 1:</span>
+              <span class="review-value wrap-text">{{ getFormValue('step4_security.question1') }}</span>
+            </div>
+            <div class="review-row">
+              <span class="review-label">Security Answer 1:</span>
+              <span class="review-value">{{ getFormValue('step4_security.answer1') }}</span>
+            </div>
+            <div class="review-row">
+              <span class="review-label">Security Question 2:</span>
+              <span class="review-value wrap-text">{{ getFormValue('step4_security.question2') }}</span>
+            </div>
+            <div class="review-row">
+              <span class="review-label">Security Answer 2:</span>
+              <span class="review-value">{{ getFormValue('step4_security.answer2') }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="terms-buttons-group">
+          <button class="btn-cancel half-width" type="button" (click)="goBack()">Back</button>
+          <button class="btn-primary half-width" type="button" (click)="submitRegistration()">Submit Registration</button>
+        </div>
+      </div>
+
+      <!-- ============================================== -->
+      <!-- STEP 5.1: REGISTRATION SUCCESS SCREEN          -->
+      <!-- ============================================== -->
+      <div *ngIf="currentStep() === 5" class="form-step-container success-step text-center">
+        <div class="success-icon-wrapper">
+          <svg width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="#1e9e49" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+            <polyline points="22 4 12 14.01 9 11.01" />
+          </svg>
+        </div>
+        
+        <h2 class="success-title">Registration Successful!</h2>
+        <p class="success-message">Welcome aboard! Your registration has been processed successfully. You can now login to your account using your phone number and PIN.</p>
+        
+        <button class="btn-primary" type="button" (click)="startOver()">Start Over</button>
+      </div>
+
+    </div>
+  </div>
+</div>

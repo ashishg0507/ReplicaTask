@@ -1,1 +1,351 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+app-header {
+  display: block;
+  width: 100%;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+app-registration, app-footer {
+  display: block;
+  width: 100%;
+}
+
+:root {
+  --primary-green: #1e9e49;
+  --hover-green: #187f3b;
+  --primary-orange: #ff8c2b;
+  --hover-orange: #e57d25;
+  --primary-blue: #1a82e2;
+  --hover-blue: #1362ac;
+  --gray-dark: #333333;
+  --gray-medium: #666666;
+  --gray-light: #cccccc;
+  --gray-border: #e0e0e0;
+  --bg-light: #f7faf7;
+  --bg-card: #ffffff;
+  --border-light: #cde2cd;
+  
+  --error-color: #d32f2f;
+  --error-bg-border: #c4401a;
+  
+  --font-family: 'Outfit', sans-serif;
+  --transition-speed: 0.3s;
+  --border-radius: 8px;
+  --shadow-premium: 0 12px 30px rgba(0, 0, 0, 0.06), 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--bg-light);
+  color: var(--gray-dark);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  position: relative;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: all var(--transition-speed) ease;
+}
+
+button {
+  font-family: var(--font-family);
+  cursor: pointer;
+  border: none;
+  outline: none;
+  transition: all var(--transition-speed) ease;
+}
+
+/* Background elements matching the screenshots */
+.bg-decorations {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.decor-striped-circle {
+  position: absolute;
+  top: 50px;
+  left: -50px;
+  width: 250px;
+  height: 250px;
+  background: repeating-linear-gradient(
+    -45deg,
+    #ffc799,
+    #ffc799 10px,
+    transparent 10px,
+    transparent 20px
+  );
+  border-radius: 50%;
+  opacity: 0.45;
+}
+
+.decor-green-circle-1 {
+  position: absolute;
+  top: 250px;
+  right: 20%;
+  width: 70px;
+  height: 70px;
+  border: 3px solid #1e9e49;
+  border-radius: 50%;
+  opacity: 0.25;
+}
+
+.decor-green-circle-2 {
+  position: absolute;
+  top: 340px;
+  right: 17%;
+  width: 35px;
+  height: 35px;
+  border: 2px solid #1e9e49;
+  border-radius: 50%;
+  opacity: 0.25;
+}
+
+.decor-green-circle-3 {
+  position: absolute;
+  top: 500px;
+  right: 7%;
+  width: 48px;
+  height: 48px;
+  border: 2.5px solid #1e9e49;
+  border-radius: 50%;
+  opacity: 0.25;
+}
+
+.decor-orange-circle-small {
+  position: absolute;
+  top: 600px;
+  left: 22%;
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid #ff8c2b;
+  border-radius: 50%;
+  opacity: 0.25;
+}
+
+/* Bottom Ripple concentric circles */
+.decor-ripple-left {
+  position: absolute;
+  bottom: -150px;
+  left: -150px;
+  width: 450px;
+  height: 450px;
+  border-radius: 50%;
+  border: 1px solid rgba(30, 158, 73, 0.08);
+  box-shadow: 
+    0 0 0 40px rgba(30, 158, 73, 0.02),
+    0 0 0 80px rgba(30, 158, 73, 0.02),
+    0 0 0 120px rgba(30, 158, 73, 0.01),
+    0 0 0 160px rgba(30, 158, 73, 0.01);
+  opacity: 0.8;
+}
+
+.decor-ripple-right {
+  position: absolute;
+  bottom: -200px;
+  right: -200px;
+  width: 550px;
+  height: 550px;
+  border-radius: 50%;
+  border: 1px solid rgba(30, 158, 73, 0.08);
+  box-shadow: 
+    0 0 0 50px rgba(30, 158, 73, 0.02),
+    0 0 0 100px rgba(30, 158, 73, 0.02),
+    0 0 0 150px rgba(30, 158, 73, 0.015),
+    0 0 0 200px rgba(30, 158, 73, 0.01);
+  opacity: 0.8;
+}
+
+/* Inputs styling matching exact screenshot aesthetics */
+.floating-input-group {
+  position: relative;
+  margin-bottom: 22px;
+  width: 100%;
+}
+
+.floating-input-group label {
+  position: absolute;
+  top: -10px;
+  left: 12px;
+  background: var(--bg-card);
+  padding: 0 6px;
+  font-size: 13px;
+  color: var(--primary-green);
+  font-weight: 500;
+  z-index: 2;
+  pointer-events: none;
+  transition: all var(--transition-speed) ease;
+}
+
+.floating-input-group input,
+.floating-input-group select {
+  width: 100%;
+  padding: 14px 16px;
+  font-size: 15px;
+  font-family: var(--font-family);
+  color: var(--gray-dark);
+  border: 1.5px solid var(--border-light);
+  border-radius: var(--border-radius);
+  background-color: var(--bg-card);
+  outline: none;
+  transition: border-color var(--transition-speed) ease;
+}
+
+.floating-input-group select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23666666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  padding-right: 40px;
+}
+
+.floating-input-group input::placeholder {
+  color: var(--gray-light);
+}
+
+.floating-input-group input:focus,
+.floating-input-group select:focus {
+  border-color: var(--primary-green);
+}
+
+/* Validation Error state for floating input fields */
+.floating-input-group.has-error label {
+  color: var(--error-color) !important;
+}
+
+.floating-input-group.has-error input,
+.floating-input-group.has-error select {
+  border-color: var(--error-bg-border) !important;
+}
+
+.field-error-message {
+  color: var(--error-color);
+  font-size: 12.5px;
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 500;
+  text-align: left;
+}
+
+.field-error-message svg {
+  flex-shrink: 0;
+}
+
+/* Button styles */
+.btn-primary {
+  background-color: var(--primary-green);
+  color: #ffffff;
+  padding: 13px 28px;
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: var(--border-radius);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color var(--transition-speed) ease;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--hover-green);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background-color: var(--primary-orange);
+  color: #ffffff;
+  padding: 13px 28px;
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: var(--border-radius);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color var(--transition-speed) ease;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: var(--hover-orange);
+}
+
+.btn-cancel {
+  background-color: #5d5d5d;
+  color: #ffffff;
+  padding: 13px 28px;
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: var(--border-radius);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color var(--transition-speed) ease;
+}
+
+.btn-cancel:hover {
+  background-color: #4a4a4a;
+}
+
+.btn-outline-orange {
+  border: 1.5px solid var(--primary-orange);
+  background-color: transparent;
+  color: var(--primary-orange);
+  padding: 13px 28px;
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: var(--border-radius);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-speed) ease;
+}
+
+.btn-outline-orange:hover {
+  background-color: rgba(255, 140, 43, 0.05);
+}
+
+/* Chat Widget Icon at bottom-right */
+.chat-widget-trigger {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  background-color: #00e676;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(0, 230, 118, 0.3);
+  z-index: 999;
+  cursor: pointer;
+  transition: transform var(--transition-speed) ease;
+}
+
+.chat-widget-trigger:hover {
+  transform: scale(1.08);
+}

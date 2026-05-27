@@ -1,0 +1,73 @@
+<header class="main-header">
+  <div class="header-container">
+    <nav class="nav-links">
+      <a href="javascript:void(0)" class="nav-item">Home</a>
+      <a href="javascript:void(0)" class="nav-item">Supreme Ventures Gaming</a>
+      <a href="javascript:void(0)" class="nav-item">Lottery Games</a>
+      
+      <!-- JustBet Dropdown Link -->
+      <div class="dropdown-wrapper">
+        <a href="javascript:void(0)" class="nav-item dropdown-toggle" (click)="toggleJustBet($event)">
+          JustBet <span class="arrow" [class.open]="justBetOpen()">▾</span>
+        </a>
+        <div class="dropdown-menu justbet-dropdown" [class.show]="justBetOpen()">
+          <a href="javascript:void(0)" class="dropdown-item">
+            <span class="icon sports-icon">
+              <!-- Sports Betting Ticket SVG -->
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="4" width="20" height="16" rx="2" />
+                <line x1="6" y1="8" x2="18" y2="8" />
+                <line x1="6" y1="12" x2="18" y2="12" />
+                <line x1="6" y1="16" x2="12" y2="16" />
+              </svg>
+            </span>
+            Sports Betting
+          </a>
+          <a href="javascript:void(0)" class="dropdown-item">
+            <span class="icon live-icon">
+              <!-- Live Betting Mobile SVG -->
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="5" y="2" width="14" height="20" rx="2" />
+                <line x1="12" y1="18" x2="12" y2="18.01" stroke-linecap="round" />
+                <path d="M9 6h6" stroke-linecap="round" />
+              </svg>
+            </span>
+            Live Betting
+          </a>
+          <a href="javascript:void(0)" class="dropdown-item">
+            <span class="icon virtual-icon">
+              <!-- Game Controller SVG -->
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="6" width="20" height="12" rx="3" />
+                <path d="M6 12h4M8 10v4M15 11v.01M18 13v.01" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </span>
+            Virtual Betting
+          </a>
+        </div>
+      </div>
+      
+      <a href="javascript:void(0)" class="nav-item">Acropolis Gaming</a>
+      
+      <!-- Help Dropdown Link -->
+      <div class="dropdown-wrapper">
+        <a href="javascript:void(0)" class="nav-item dropdown-toggle" (click)="toggleHelp($event)">
+          Help <span class="arrow" [class.open]="helpOpen()">▾</span>
+        </a>
+        <div class="dropdown-menu help-dropdown" [class.show]="helpOpen()">
+          <a href="javascript:void(0)" class="dropdown-item">Top Ups & Redemption</a>
+          <a href="javascript:void(0)" class="dropdown-item">Locations</a>
+          <a href="javascript:void(0)" class="dropdown-item">Account Tiers</a>
+          <a href="javascript:void(0)" class="dropdown-item">FAQ'S</a>
+        </div>
+      </div>
+    </nav>
+    
+    <div class="header-actions">
+      <button class="btn-login">Login</button>
+      <button class="btn-register">Registration</button>
+      <button class="btn-download">Download</button>
+    </div>
+  </div>
+  <div class="header-accent-line"></div>
+</header>

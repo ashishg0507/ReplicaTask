@@ -1,0 +1,70 @@
+{
+  "parishes": [
+    {
+      "name": "Kingston",
+      "towns": [
+        {
+          "name": "Kingston",
+          "districts": ["Downtown Kingston", "Port Royal", "Harbour View", "Trench Town", "Rae Town"]
+        }
+      ]
+    },
+    {
+      "name": "St. Andrew",
+      "towns": [
+        {
+          "name": "Half Way Tree",
+          "districts": ["Constant Spring", "Norbrook", "Cherry Gardens", "Meadowbrook", "Havendale"]
+        },
+        {
+          "name": "Liguanea",
+          "districts": ["Mona", "Beverly Hills", "Barbican", "Hope Pastures"]
+        }
+      ]
+    },
+    {
+      "name": "St. Catherine",
+      "towns": [
+        {
+          "name": "Spanish Town",
+          "districts": ["Eltham Acres", "Homestead", "Ensom City", "Greendale", "Central Village"]
+        },
+        {
+          "name": "Portmore",
+          "districts": ["Gregory Park", "Edgewater", "Bridgeport", "Braeton", "Greater Portmore"]
+        }
+      ]
+    },
+    {
+      "name": "St. James",
+      "towns": [
+        {
+          "name": "Montego Bay",
+          "districts": ["Glendevon", "Flankers", "Mount Salem", "Ironshore", "Rose Hall", "Bogue"]
+        }
+      ]
+    },
+    {
+      "name": "St. Ann",
+      "towns": [
+        {
+          "name": "Ocho Rios",
+          "districts": ["Buckfield", "Shaw Park", "Pine Grove", "Mansfield", "Content Gardens"]
+        },
+        {
+          "name": "St. Ann's Bay",
+          "districts": ["Priory", "Windsor", "Seville", "Chalky Hill"]
+        }
+      ]
+    },
+    {
+      "name": "Manchester",
+      "towns": [
+        {
+          "name": "Mandeville",
+          "districts": ["Caledonia", "Brumalia", "Cedar Gardens", "New Green", "Ingleside"]
+        }
+      ]
+    }
+  ]
+}

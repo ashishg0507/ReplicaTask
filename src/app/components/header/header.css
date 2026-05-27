@@ -1,0 +1,198 @@
+.main-header {
+  background-color: #ffffff;
+  width: 100%;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+}
+
+.header-container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 16px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.nav-item {
+  color: #555555;
+  font-size: 14.5px;
+  font-weight: 500;
+  padding: 6px 4px;
+  border-bottom: 2px solid transparent;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.nav-item:hover, .nav-item.active {
+  color: var(--primary-green);
+}
+
+.dropdown-wrapper {
+  position: relative;
+}
+
+.dropdown-toggle {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.arrow {
+  display: inline-block;
+  transition: transform 0.2s ease;
+  font-size: 11px;
+  margin-top: 1px;
+}
+
+.arrow.open {
+  transform: rotate(180deg);
+}
+
+/* Dropdown styling */
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 0;
+  background-color: #ffffff;
+  min-width: 190px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-premium), 0 0 1px rgba(0, 0, 0, 0.1);
+  padding: 8px 0;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 1010;
+}
+
+.dropdown-menu.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdown-item {
+  padding: 11px 18px;
+  font-size: 14px;
+  color: #444444;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.dropdown-item:hover {
+  background-color: #f1f7f2;
+  color: var(--primary-green);
+}
+
+/* Specific item designs */
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+}
+
+.sports-icon {
+  background-color: #fff9e6;
+  color: var(--primary-orange);
+}
+
+.live-icon {
+  background-color: #e6f6ec;
+  color: var(--primary-green);
+}
+
+.virtual-icon {
+  background-color: #f0f4ff;
+  color: var(--primary-blue);
+}
+
+/* Actions buttons styling */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.btn-login {
+  background-color: var(--primary-orange);
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 14.5px;
+  padding: 10px 24px;
+  border-radius: 6px;
+  border: none;
+  min-width: 100px;
+}
+
+.btn-login:hover {
+  background-color: var(--hover-orange);
+}
+
+.btn-register {
+  background-color: var(--primary-green);
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 14.5px;
+  padding: 10px 24px;
+  border-radius: 6px;
+  border: none;
+  min-width: 110px;
+}
+
+.btn-register:hover {
+  background-color: var(--hover-green);
+}
+
+.btn-download {
+  background-color: var(--primary-blue);
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 14.5px;
+  padding: 10px 24px;
+  border-radius: 6px;
+  border: none;
+  min-width: 100px;
+}
+
+.btn-download:hover {
+  background-color: var(--hover-blue);
+}
+
+.header-accent-line {
+  height: 4.5px;
+  width: 100%;
+  background-color: var(--primary-green);
+}
+
+@media (max-width: 1024px) {
+  .nav-links {
+    gap: 12px;
+  }
+  .nav-item {
+    font-size: 13.5px;
+  }
+  .header-actions {
+    gap: 8px;
+  }
+  .header-actions button {
+    padding: 8px 16px;
+    font-size: 13.5px;
+    min-width: unset;
+  }
+}
