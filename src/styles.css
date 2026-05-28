@@ -433,3 +433,49 @@ button {
   background-color: #6d6b6b; /* Greyish / brownish background on hover matching screenshot */
   color: #ffffff; /* White text on hover */
 }
+
+/* Global Media Queries for Mobile Responsiveness */
+@media (max-width: 768px) {
+  /* Prevent background decoration overflow and visual distraction on tablets/mobiles */
+  .decor-green-circle-1,
+  .decor-green-circle-2,
+  .decor-green-circle-3,
+  .decor-orange-circle-small,
+  .decor-ripple-left,
+  .decor-ripple-right {
+    display: none !important;
+  }
+  
+  /* Scale down the big top-left striped decoration circle to not overlap the card content */
+  .decor-striped-circle {
+    width: 180px;
+    height: 180px;
+    left: -40px;
+    top: -10px;
+    opacity: 0.7;
+  }
+  
+  /* Modern premium input optimization to prevent iOS Safari auto-zooming on small text fields */
+  .floating-input-group input,
+  .floating-input-group select,
+  .custom-select-trigger,
+  .custom-select-option {
+    font-size: 16px !important;
+  }
+  
+  /* Scale down spacing of support widget on mobile to prevent blocking UI components */
+  .chat-widget-trigger {
+    bottom: 16px;
+    right: 16px;
+    width: 44px;
+    height: 44px;
+    box-shadow: 0 4px 10px rgba(0, 200, 83, 0.3);
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    background-color: #f7faf7; /* Ensure a clean soft background */
+  }
+}
+

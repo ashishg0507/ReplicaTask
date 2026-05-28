@@ -532,42 +532,100 @@
   font-weight: 500;
 }
 
-@media (max-width: 540px) {
-  .registration-card {
-    padding: 24px 20px 32px 20px;
-    margin-bottom: 24px;
+/* ==================================================== */
+/* Consolidated High-Fidelity Mobile Media Queries      */
+/* ==================================================== */
+@media (max-width: 768px) {
+  .registration-wrapper-main {
+    padding: 16px 8px;
+    min-height: calc(100vh - 120px);
   }
-  .registration-card.terms-card {
-    padding: 0 !important;
-  }
-  .terms-scrollable-container {
-    padding: 24px 20px 32px 20px;
-    max-height: 480px;
-  }
-  .card-buttons-group {
-    flex-direction: column;
-    gap: 10px;
-  }
-  .terms-buttons-group {
-    flex-direction: column;
-    gap: 10px;
+  .main-title {
+    font-size: 22px;
+    margin-bottom: 20px;
   }
   .stepper-container {
-    max-width: 320px;
+    width: 92%;
+    max-width: 380px;
+    margin: 0 auto 24px auto;
   }
   .step-circle {
     width: 32px;
     height: 32px;
-    border-width: 3px;
+    font-size: 13px;
+  }
+  .circle-check {
+    font-size: 14px;
+  }
+  .registration-card {
+    width: calc(100% - 16px);
+    max-width: 480px;
+    padding: 24px 16px 28px 16px;
+    margin-bottom: 20px;
+  }
+  .terms-scrollable-container,
+  .registration-scroll-container {
+    max-height: 52vh !important;
+  }
+  .scrollable-content-padding {
+    padding: 16px 12px;
+  }
+  .photo-upload-row {
+    flex-direction: column;
+    gap: 14px;
+  }
+  .id-upload-box {
+    height: 85px;
+  }
+  .review-grid {
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .review-section {
+    padding: 12px;
+  }
+  .review-row {
+    font-size: 12.5px;
+    margin-bottom: 6px;
+    padding-bottom: 2px;
+  }
+}
+
+@media (max-width: 540px) {
+  .registration-card.terms-card {
+    padding: 0 !important;
+  }
+  .terms-scrollable-container {
+    padding: 16px 12px !important;
+  }
+  .card-buttons-group,
+  .terms-buttons-group {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .card-buttons-group button,
+  .terms-buttons-group button,
+  .btn-clear {
+    width: 100% !important;
+    height: 48px;
   }
   .referral-row {
     flex-direction: column;
     gap: 0;
   }
   .btn-clear {
-    width: 100%;
     margin-top: -6px;
     margin-bottom: 22px;
+  }
+  .country-mobile-row {
+    gap: 8px !important;
+  }
+  .success-title {
+    font-size: 22px;
+  }
+  .success-message {
+    font-size: 14px;
+    margin-bottom: 20px;
   }
 }
 
@@ -783,13 +841,4 @@
   font-weight: 500;
 }
 
-@media (max-width: 540px) {
-  .photo-upload-row {
-    flex-direction: column;
-    gap: 14px;
-  }
-  .id-upload-box {
-    height: 110px;
-  }
-}
 
