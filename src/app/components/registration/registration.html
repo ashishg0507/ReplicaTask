@@ -12,7 +12,7 @@
 
   <div class="content-container">
     <h1 class="main-title" *ngIf="currentStep() !== 0.5">Registration</h1>
-    <h1 class="main-title" *ngIf="currentStep() === 0.5" style="color: var(--primary-green); font-weight: 700; font-size: 28px; margin-top: 10px; margin-bottom: 24px;">Terms and Conditions</h1>
+    <h1 class="main-title" *ngIf="currentStep() === 0.5" style="color: var(--primary-green); font-weight: 500; font-size: 28px; margin-top: 10px; margin-bottom: 24px;">Terms and Conditions</h1>
     
     <!-- STEPPER HEADER (Dynamic 5 Circles) - Only shown if not on Success screen and not on Terms -->
     <div class="stepper-container" *ngIf="currentStep() <= 4 && currentStep() !== 0.5">
@@ -91,9 +91,17 @@
           <!-- Country code select dropdown -->
           <div class="floating-input-group country-code-group" [class.has-error]="isFieldInvalid('step1_mobile', 'countryCode')">
             <label>Country code *</label>
-            <select formControlName="countryCode">
-              <option *ngFor="let item of regService.countryCodes" [value]="item.code">{{ item.code }}</option>
-            </select>
+            <div class="custom-select-wrapper" (click)="toggleDropdown('countryCode', $event)">
+              <div class="custom-select-trigger" [class.open]="isDropdownOpen('countryCode')">
+                <span>{{ getSelectedDisplayValue('step1_mobile', 'countryCode') }}</span>
+                <span class="custom-arrow">▾</span>
+              </div>
+              <div class="custom-select-options" *ngIf="isDropdownOpen('countryCode')">
+                <div class="custom-select-option" *ngFor="let item of regService.countryCodes" (click)="selectOption('step1_mobile', 'countryCode', item.code, $event)">
+                  {{ item.code }}
+                </div>
+              </div>
+            </div>
             <div class="field-error-message" *ngIf="isFieldInvalid('step1_mobile', 'countryCode')">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="12" cy="12" r="10" />
@@ -409,12 +417,12 @@
           <h4 class="terms-subsection-title">25. Direct Marketing</h4>
           <p class="terms-p">You confirm that you agree to receive messages and notifications about our products and services. You have the right to withdraw your consent at any time. Our Privacy Notice provides further information on how to do so.</p>
 
-          <h4 class="terms-subsection-title">26. Deposit of Funds</h4>
+           <h4 class="terms-subsection-title">26. Deposit of Funds</h4>
           <p class="terms-p">Any deposited funds that have not been utilized within seven (7) days of being deposited will be available for withdrawal on the 8th day.</p>
-          <div class="terms-buttons-group">
-            <button class="btn-outline-orange half-width" type="button" (click)="declineTerms()">Decline</button>
-            <button class="btn-primary half-width" type="button" (click)="acceptTerms()">Accept Terms & Conditions</button>
-          </div>
+        </div>
+        <div class="terms-buttons-group">
+          <button class="btn-outline-orange half-width" type="button" (click)="declineTerms()">Decline</button>
+          <button class="btn-primary half-width" type="button" (click)="acceptTerms()">Accept Terms & Conditions</button>
         </div>
       </div>
 
@@ -493,10 +501,17 @@
 
           <div class="floating-input-group" [class.has-error]="isFieldInvalid('step2_personal', 'gender')">
             <label>Gender *</label>
-            <select formControlName="gender">
-              <option value="" disabled>Select</option>
-              <option *ngFor="let item of regService.genders" [value]="item">{{ item }}</option>
-            </select>
+            <div class="custom-select-wrapper" (click)="toggleDropdown('gender', $event)">
+              <div class="custom-select-trigger" [class.open]="isDropdownOpen('gender')">
+                <span>{{ getSelectedDisplayValue('step2_personal', 'gender') }}</span>
+                <span class="custom-arrow">▾</span>
+              </div>
+              <div class="custom-select-options" *ngIf="isDropdownOpen('gender')">
+                <div class="custom-select-option" *ngFor="let item of regService.genders" (click)="selectOption('step2_personal', 'gender', item, $event)">
+                  {{ item }}
+                </div>
+              </div>
+            </div>
             <div class="field-error-message" *ngIf="isFieldInvalid('step2_personal', 'gender')">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="12" cy="12" r="10" />
@@ -509,10 +524,17 @@
 
           <div class="floating-input-group" [class.has-error]="isFieldInvalid('step2_personal', 'countryOfBirth')">
             <label>Country of Birth *</label>
-            <select formControlName="countryOfBirth">
-              <option value="" disabled>Select</option>
-              <option *ngFor="let item of regService.countries" [value]="item">{{ item }}</option>
-            </select>
+            <div class="custom-select-wrapper" (click)="toggleDropdown('countryOfBirth', $event)">
+              <div class="custom-select-trigger" [class.open]="isDropdownOpen('countryOfBirth')">
+                <span>{{ getSelectedDisplayValue('step2_personal', 'countryOfBirth') }}</span>
+                <span class="custom-arrow">▾</span>
+              </div>
+              <div class="custom-select-options" *ngIf="isDropdownOpen('countryOfBirth')">
+                <div class="custom-select-option" *ngFor="let item of regService.countries" (click)="selectOption('step2_personal', 'countryOfBirth', item, $event)">
+                  {{ item }}
+                </div>
+              </div>
+            </div>
             <div class="field-error-message" *ngIf="isFieldInvalid('step2_personal', 'countryOfBirth')">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="12" cy="12" r="10" />
@@ -525,10 +547,17 @@
 
           <div class="floating-input-group" [class.has-error]="isFieldInvalid('step2_personal', 'nationality')">
             <label>Nationality *</label>
-            <select formControlName="nationality">
-              <option value="" disabled>Select</option>
-              <option *ngFor="let item of regService.nationalities" [value]="item">{{ item }}</option>
-            </select>
+            <div class="custom-select-wrapper" (click)="toggleDropdown('nationality', $event)">
+              <div class="custom-select-trigger" [class.open]="isDropdownOpen('nationality')">
+                <span>{{ getSelectedDisplayValue('step2_personal', 'nationality') }}</span>
+                <span class="custom-arrow">▾</span>
+              </div>
+              <div class="custom-select-options" *ngIf="isDropdownOpen('nationality')">
+                <div class="custom-select-option" *ngFor="let item of regService.nationalities" (click)="selectOption('step2_personal', 'nationality', item, $event)">
+                  {{ item }}
+                </div>
+              </div>
+            </div>
             <div class="field-error-message" *ngIf="isFieldInvalid('step2_personal', 'nationality')">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="12" cy="12" r="10" />
@@ -545,63 +574,115 @@
           <button class="btn-primary half-width" type="button" (click)="saveAndContinue()">Save and Continue</button>
         </div>
       </div>
-
       <!-- ============================================== -->
-      <!-- STEP 3: ADDRESS DETAILS VIEW                   -->
+      <!-- STEP 3: ACCOUNT SECURITY VIEW                  -->
       <!-- ============================================== -->
       <div *ngIf="currentStep() === 2" [formGroup]="getActiveFormGroup()" class="form-step-container">
-        <h2 class="card-title">Address & Location</h2>
-        <p class="card-subtitle">Please enter your geographical details.</p>
+        <h2 class="card-title">Account Security</h2>
+        <p class="card-subtitle orange-text">Set up your security questions and account PIN.</p>
 
         <div class="form-fields-container vertical-inputs">
-          <!-- Parish cascading select -->
-          <div class="floating-input-group" [class.has-error]="isFieldInvalid('step3_address', 'parish')">
-            <label>Parish *</label>
-            <select formControlName="parish" (change)="onParishChange($event)">
-              <option value="" disabled>Select Parish</option>
-              <option *ngFor="let item of parishesList()" [value]="item.name">{{ item.name }}</option>
-            </select>
-            <div class="field-error-message" *ngIf="isFieldInvalid('step3_address', 'parish')">
+          <!-- Security Question 1 -->
+          <div class="floating-input-group" [class.has-error]="isFieldInvalid('step3_security', 'question1')">
+            <label>Security Question 1 *</label>
+            <div class="custom-select-wrapper" (click)="toggleDropdown('question1', $event)">
+              <div class="custom-select-trigger" [class.open]="isDropdownOpen('question1')">
+                <span>{{ getSelectedDisplayValue('step3_security', 'question1', 'Select Question') }}</span>
+                <span class="custom-arrow">▾</span>
+              </div>
+              <div class="custom-select-options" *ngIf="isDropdownOpen('question1')">
+                <div class="custom-select-option" *ngFor="let item of regService.securityQuestions" (click)="selectOption('step3_security', 'question1', item, $event)">
+                  {{ item }}
+                </div>
+              </div>
+            </div>
+            <div class="field-error-message" *ngIf="isFieldInvalid('step3_security', 'question1')">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="12" cy="12" r="10" />
                 <line x1="12" y1="8" x2="12" y2="12" />
                 <line x1="12" y1="16" x2="12.01" y2="16" stroke-linecap="round" />
               </svg>
-              {{ getFieldError('step3_address', 'parish') }}
+              {{ getFieldError('step3_security', 'question1') }}
             </div>
           </div>
 
-          <!-- Town cascading select -->
-          <div class="floating-input-group" [class.has-error]="isFieldInvalid('step3_address', 'town')">
-            <label>Town *</label>
-            <select formControlName="town" (change)="onTownChange($event)">
-              <option value="" disabled>Select Town</option>
-              <option *ngFor="let item of townsList()" [value]="item.name">{{ item.name }}</option>
-            </select>
-            <div class="field-error-message" *ngIf="isFieldInvalid('step3_address', 'town')">
+          <!-- Security Answer 1 -->
+          <div class="floating-input-group" [class.has-error]="isFieldInvalid('step3_security', 'answer1')">
+            <label>Security Answer 1 *</label>
+            <input type="text" formControlName="answer1" />
+            <div class="field-error-message" *ngIf="isFieldInvalid('step3_security', 'answer1')">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="12" cy="12" r="10" />
                 <line x1="12" y1="8" x2="12" y2="12" />
                 <line x1="12" y1="16" x2="12.01" y2="16" stroke-linecap="round" />
               </svg>
-              {{ getFieldError('step3_address', 'town') }}
+              {{ getFieldError('step3_security', 'answer1') }}
             </div>
           </div>
 
-          <!-- District cascading select -->
-          <div class="floating-input-group" [class.has-error]="isFieldInvalid('step3_address', 'district')">
-            <label>District *</label>
-            <select formControlName="district">
-              <option value="" disabled>Select District</option>
-              <option *ngFor="let item of districtsList()" [value]="item">{{ item }}</option>
-            </select>
-            <div class="field-error-message" *ngIf="isFieldInvalid('step3_address', 'district')">
+          <!-- Security Question 2 -->
+          <div class="floating-input-group" [class.has-error]="isFieldInvalid('step3_security', 'question2')">
+            <label>Security Question 2 *</label>
+            <div class="custom-select-wrapper" (click)="toggleDropdown('question2', $event)">
+              <div class="custom-select-trigger" [class.open]="isDropdownOpen('question2')">
+                <span>{{ getSelectedDisplayValue('step3_security', 'question2', 'Select Question') }}</span>
+                <span class="custom-arrow">▾</span>
+              </div>
+              <div class="custom-select-options" *ngIf="isDropdownOpen('question2')">
+                <div class="custom-select-option" *ngFor="let item of regService.securityQuestions" (click)="selectOption('step3_security', 'question2', item, $event)">
+                  {{ item }}
+                </div>
+              </div>
+            </div>
+            <div class="field-error-message" *ngIf="isFieldInvalid('step3_security', 'question2')">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="12" cy="12" r="10" />
                 <line x1="12" y1="8" x2="12" y2="12" />
                 <line x1="12" y1="16" x2="12.01" y2="16" stroke-linecap="round" />
               </svg>
-              {{ getFieldError('step3_address', 'district') }}
+              {{ getFieldError('step3_security', 'question2') }}
+            </div>
+          </div>
+
+          <!-- Security Answer 2 -->
+          <div class="floating-input-group" [class.has-error]="isFieldInvalid('step3_security', 'answer2')">
+            <label>Security Answer 2 *</label>
+            <input type="text" formControlName="answer2" />
+            <div class="field-error-message" *ngIf="isFieldInvalid('step3_security', 'answer2')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" stroke-linecap="round" />
+              </svg>
+              {{ getFieldError('step3_security', 'answer2') }}
+            </div>
+          </div>
+
+          <!-- PIN setup -->
+          <div class="floating-input-group" [class.has-error]="isFieldInvalid('step3_security', 'pin')">
+            <label>Account PIN (4 digits) *</label>
+            <input type="password" formControlName="pin" maxlength="4" placeholder="••••" />
+            <div class="field-error-message" *ngIf="isFieldInvalid('step3_security', 'pin')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" stroke-linecap="round" />
+              </svg>
+              {{ getFieldError('step3_security', 'pin') }}
+            </div>
+          </div>
+
+          <!-- Confirm PIN -->
+          <div class="floating-input-group" [class.has-error]="isFieldInvalid('step3_security', 'confirmPin')">
+            <label>Confirm PIN *</label>
+            <input type="password" formControlName="confirmPin" maxlength="4" placeholder="••••" />
+            <div class="field-error-message" *ngIf="isFieldInvalid('step3_security', 'confirmPin')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" stroke-linecap="round" />
+              </svg>
+              {{ getFieldError('step3_security', 'confirmPin') }}
             </div>
           </div>
         </div>
@@ -613,141 +694,249 @@
       </div>
 
       <!-- ============================================== -->
-      <!-- STEP 4: SECURITY & PIN DETAILS VIEW            -->
+      <!-- STEP 4: PERMANENT ADDRESS & IDENTIFICATION VIEW-->
       <!-- ============================================== -->
       <div *ngIf="currentStep() === 3" [formGroup]="getActiveFormGroup()" class="form-step-container">
-        <h2 class="card-title">Identification & Security</h2>
-
-        <div class="form-fields-container vertical-inputs">
-          <!-- Document type selection -->
-          <div class="floating-input-group">
-            <label>Document Type *</label>
-            <select formControlName="documentType">
-              <option value="TRN">TRN (Tax Registration Number)</option>
-              <option value="NationalID">National ID Card</option>
-            </select>
-          </div>
-
-          <!-- TRN Input limit to 9 digits, numeric only -->
-          <div class="floating-input-group" [class.has-error]="isFieldInvalid('step4_security', 'trnNumber')">
-            <label>TRN / Document Number *</label>
-            <input type="text" formControlName="trnNumber" placeholder="Exactly 9 digits (numbers only)" maxlength="9" />
-            <div class="field-error-message" *ngIf="isFieldInvalid('step4_security', 'trnNumber')">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10" />
-                <line x1="12" y1="8" x2="12" y2="12" />
-                <line x1="12" y1="16" x2="12.01" y2="16" stroke-linecap="round" />
-              </svg>
-              {{ getFieldError('step4_security', 'trnNumber') }}
+        <!-- Title and Card structure -->
+        <h2 class="card-title-address-id">Permanent Address and Identification</h2>
+        
+        <!-- Scrollable Inner green border Box matching screenshots -->
+        <div class="registration-scroll-container">
+          <div class="form-fields-container vertical-inputs scrollable-content-padding">
+            <!-- Street Address -->
+            <div class="floating-input-group" [class.has-error]="isFieldInvalid('step4_address_id', 'streetAddress')">
+              <label>Street Address *</label>
+              <input type="text" formControlName="streetAddress" />
+              <div class="field-error-message" *ngIf="isFieldInvalid('step4_address_id', 'streetAddress')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="8" x2="12" y2="12" />
+                  <line x1="12" y1="16" x2="12.01" y2="16" stroke-linecap="round" />
+                </svg>
+                {{ getFieldError('step4_address_id', 'streetAddress') }}
+              </div>
             </div>
-          </div>
+            <p class="field-hint-below">* Residential only, No PO Box</p>
 
-          <!-- Expiration Date future date only -->
-          <div class="floating-input-group" [class.has-error]="isFieldInvalid('step4_security', 'expirationDate')">
-            <label>ID Expiration Date *</label>
-            <input type="date" formControlName="expirationDate" class="datepicker-input" />
-            <div class="field-error-message" *ngIf="isFieldInvalid('step4_security', 'expirationDate')">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10" />
-                <line x1="12" y1="8" x2="12" y2="12" />
-                <line x1="12" y1="16" x2="12.01" y2="16" stroke-linecap="round" />
-              </svg>
-              {{ getFieldError('step4_security', 'expirationDate') }}
+            <!-- Apartment/Suite -->
+            <div class="floating-input-group">
+              <label>Apartment/Suite</label>
+              <input type="text" formControlName="apartmentSuite" />
             </div>
-          </div>
 
-          <!-- Security Question 1 -->
-          <div class="floating-input-group" [class.has-error]="isFieldInvalid('step4_security', 'question1')">
-            <label>Security Question 1 *</label>
-            <select formControlName="question1">
-              <option value="" disabled>Select Question</option>
-              <option *ngFor="let item of regService.securityQuestions" [value]="item">{{ item }}</option>
-            </select>
-            <div class="field-error-message" *ngIf="isFieldInvalid('step4_security', 'question1')">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10" />
-                <line x1="12" y1="8" x2="12" y2="12" />
-                <line x1="12" y1="16" x2="12.01" y2="16" stroke-linecap="round" />
-              </svg>
-              {{ getFieldError('step4_security', 'question1') }}
+            <!-- Parish cascading select -->
+            <div class="floating-input-group" [class.has-error]="isFieldInvalid('step4_address_id', 'parish')">
+              <label>Parish *</label>
+              <div class="custom-select-wrapper" (click)="toggleDropdown('parish', $event)">
+                <div class="custom-select-trigger" [class.open]="isDropdownOpen('parish')">
+                  <span>{{ getSelectedDisplayValue('step4_address_id', 'parish') }}</span>
+                  <span class="custom-arrow">▾</span>
+                </div>
+                <div class="custom-select-options" *ngIf="isDropdownOpen('parish')">
+                  <div class="custom-select-option" *ngFor="let item of parishesList()" (click)="selectOption('step4_address_id', 'parish', item.name, $event)">
+                    {{ item.name }}
+                  </div>
+                </div>
+              </div>
+              <div class="field-error-message" *ngIf="isFieldInvalid('step4_address_id', 'parish')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="8" x2="12" y2="12" />
+                  <line x1="12" y1="16" x2="12.01" y2="16" stroke-linecap="round" />
+                </svg>
+                {{ getFieldError('step4_address_id', 'parish') }}
+              </div>
             </div>
-          </div>
 
-          <!-- Security Answer 1 -->
-          <div class="floating-input-group" [class.has-error]="isFieldInvalid('step4_security', 'answer1')">
-            <label>Security Answer 1 *</label>
-            <input type="text" formControlName="answer1" />
-            <div class="field-error-message" *ngIf="isFieldInvalid('step4_security', 'answer1')">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10" />
-                <line x1="12" y1="8" x2="12" y2="12" />
-                <line x1="12" y1="16" x2="12.01" y2="16" stroke-linecap="round" />
-              </svg>
-              {{ getFieldError('step4_security', 'answer1') }}
+            <!-- Town cascading select -->
+            <div class="floating-input-group" [class.has-error]="isFieldInvalid('step4_address_id', 'town')">
+              <label>Town *</label>
+              <div class="custom-select-wrapper" (click)="toggleDropdown('town', $event)">
+                <div class="custom-select-trigger" [class.open]="isDropdownOpen('town')">
+                  <span>{{ getSelectedDisplayValue('step4_address_id', 'town') }}</span>
+                  <span class="custom-arrow">▾</span>
+                </div>
+                <div class="custom-select-options" *ngIf="isDropdownOpen('town')">
+                  <div class="custom-select-option" *ngFor="let item of townsList()" (click)="selectOption('step4_address_id', 'town', item.name, $event)">
+                    {{ item.name }}
+                  </div>
+                </div>
+              </div>
+              <div class="field-error-message" *ngIf="isFieldInvalid('step4_address_id', 'town')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="8" x2="12" y2="12" />
+                  <line x1="12" y1="16" x2="12.01" y2="16" stroke-linecap="round" />
+                </svg>
+                {{ getFieldError('step4_address_id', 'town') }}
+              </div>
             </div>
-          </div>
 
-          <!-- Security Question 2 -->
-          <div class="floating-input-group" [class.has-error]="isFieldInvalid('step4_security', 'question2')">
-            <label>Security Question 2 *</label>
-            <select formControlName="question2">
-              <option value="" disabled>Select Question</option>
-              <option *ngFor="let item of regService.securityQuestions" [value]="item">{{ item }}</option>
-            </select>
-            <div class="field-error-message" *ngIf="isFieldInvalid('step4_security', 'question2')">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10" />
-                <line x1="12" y1="8" x2="12" y2="12" />
-                <line x1="12" y1="16" x2="12.01" y2="16" stroke-linecap="round" />
-              </svg>
-              {{ getFieldError('step4_security', 'question2') }}
+            <!-- District select -->
+            <div class="floating-input-group" [class.has-error]="isFieldInvalid('step4_address_id', 'district')">
+              <label>District *</label>
+              <div class="custom-select-wrapper" (click)="toggleDropdown('district', $event)">
+                <div class="custom-select-trigger" [class.open]="isDropdownOpen('district')">
+                  <span>{{ getSelectedDisplayValue('step4_address_id', 'district') }}</span>
+                  <span class="custom-arrow">▾</span>
+                </div>
+                <div class="custom-select-options" *ngIf="isDropdownOpen('district')">
+                  <div class="custom-select-option" *ngFor="let item of districtsList()" (click)="selectOption('step4_address_id', 'district', item, $event)">
+                    {{ item }}
+                  </div>
+                </div>
+              </div>
+              <div class="field-error-message" *ngIf="isFieldInvalid('step4_address_id', 'district')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="8" x2="12" y2="12" />
+                  <line x1="12" y1="16" x2="12.01" y2="16" stroke-linecap="round" />
+                </svg>
+                {{ getFieldError('step4_address_id', 'district') }}
+              </div>
             </div>
-          </div>
 
-          <!-- Security Answer 2 -->
-          <div class="floating-input-group" [class.has-error]="isFieldInvalid('step4_security', 'answer2')">
-            <label>Security Answer 2 *</label>
-            <input type="text" formControlName="answer2" />
-            <div class="field-error-message" *ngIf="isFieldInvalid('step4_security', 'answer2')">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10" />
-                <line x1="12" y1="8" x2="12" y2="12" />
-                <line x1="12" y1="16" x2="12.01" y2="16" stroke-linecap="round" />
-              </svg>
-              {{ getFieldError('step4_security', 'answer2') }}
+            <!-- Email Address -->
+            <div class="floating-input-group" [class.has-error]="isFieldInvalid('step4_address_id', 'emailAddress')">
+              <label>Email Address *</label>
+              <input type="email" formControlName="emailAddress" />
+              <div class="field-error-message" *ngIf="isFieldInvalid('step4_address_id', 'emailAddress')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="8" x2="12" y2="12" />
+                  <line x1="12" y1="16" x2="12.01" y2="16" stroke-linecap="round" />
+                </svg>
+                {{ getFieldError('step4_address_id', 'emailAddress') }}
+              </div>
             </div>
-          </div>
 
-          <!-- PIN setup -->
-          <div class="floating-input-group" [class.has-error]="isFieldInvalid('step4_security', 'pin')">
-            <label>Account PIN (4 digits) *</label>
-            <input type="password" formControlName="pin" maxlength="4" placeholder="••••" />
-            <div class="field-error-message" *ngIf="isFieldInvalid('step4_security', 'pin')">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10" />
-                <line x1="12" y1="8" x2="12" y2="12" />
-                <line x1="12" y1="16" x2="12.01" y2="16" stroke-linecap="round" />
-              </svg>
-              {{ getFieldError('step4_security', 'pin') }}
+            <!-- TRN -->
+            <div class="floating-input-group" [class.has-error]="isFieldInvalid('step4_address_id', 'trnNumber')">
+              <label>TRN *</label>
+              <input type="text" formControlName="trnNumber" placeholder="Exactly 9 digits (numbers only)" maxlength="9" />
+              <div class="field-error-message" *ngIf="isFieldInvalid('step4_address_id', 'trnNumber')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="8" x2="12" y2="12" />
+                  <line x1="12" y1="16" x2="12.01" y2="16" stroke-linecap="round" />
+                </svg>
+                {{ getFieldError('step4_address_id', 'trnNumber') }}
+              </div>
             </div>
-          </div>
 
-          <!-- Confirm PIN -->
-          <div class="floating-input-group" [class.has-error]="isFieldInvalid('step4_security', 'confirmPin')">
-            <label>Confirm PIN *</label>
-            <input type="password" formControlName="confirmPin" maxlength="4" placeholder="••••" />
-            <div class="field-error-message" *ngIf="isFieldInvalid('step4_security', 'confirmPin')">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10" />
-                <line x1="12" y1="8" x2="12" y2="12" />
-                <line x1="12" y1="16" x2="12.01" y2="16" stroke-linecap="round" />
-              </svg>
-              {{ getFieldError('step4_security', 'confirmPin') }}
+            <!-- ID Type -->
+            <div class="floating-input-group" [class.has-error]="isFieldInvalid('step4_address_id', 'idType')">
+              <label>ID Type *</label>
+              <div class="custom-select-wrapper" (click)="toggleDropdown('idType', $event)">
+                <div class="custom-select-trigger" [class.open]="isDropdownOpen('idType')">
+                  <span>
+                    {{ 
+                      getSelectedDisplayValue('step4_address_id', 'idType') === 'TRN' ? 'TRN (Tax Registration Number)' :
+                      getSelectedDisplayValue('step4_address_id', 'idType') === 'NationalID' ? 'National ID Card' :
+                      getSelectedDisplayValue('step4_address_id', 'idType')
+                    }}
+                  </span>
+                  <span class="custom-arrow">▾</span>
+                </div>
+                <div class="custom-select-options" *ngIf="isDropdownOpen('idType')">
+                  <div class="custom-select-option" (click)="selectOption('step4_address_id', 'idType', 'TRN', $event)">TRN (Tax Registration Number)</div>
+                  <div class="custom-select-option" (click)="selectOption('step4_address_id', 'idType', 'NationalID', $event)">National ID Card</div>
+                </div>
+              </div>
+              <div class="field-error-message" *ngIf="isFieldInvalid('step4_address_id', 'idType')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="8" x2="12" y2="12" />
+                  <line x1="12" y1="16" x2="12.01" y2="16" stroke-linecap="round" />
+                </svg>
+                {{ getFieldError('step4_address_id', 'idType') }}
+              </div>
             </div>
+
+            <!-- ID Number -->
+            <div class="floating-input-group" [class.has-error]="isFieldInvalid('step4_address_id', 'idNumber')">
+              <label>ID Number *</label>
+              <input type="text" formControlName="idNumber" />
+              <div class="field-error-message" *ngIf="isFieldInvalid('step4_address_id', 'idNumber')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="8" x2="12" y2="12" />
+                  <line x1="12" y1="16" x2="12.01" y2="16" stroke-linecap="round" />
+                </svg>
+                {{ getFieldError('step4_address_id', 'idNumber') }}
+              </div>
+            </div>
+
+            <!-- ID Expiration Date -->
+            <div class="floating-input-group" [class.has-error]="isFieldInvalid('step4_address_id', 'expirationDate')">
+              <label>ID Expiration Date *</label>
+              <input type="date" formControlName="expirationDate" class="datepicker-input" />
+              <div class="field-error-message" *ngIf="isFieldInvalid('step4_address_id', 'expirationDate')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="8" x2="12" y2="12" />
+                  <line x1="12" y1="16" x2="12.01" y2="16" stroke-linecap="round" />
+                </svg>
+                {{ getFieldError('step4_address_id', 'expirationDate') }}
+              </div>
+            </div>
+
+            <!-- Photo Upload Header -->
+            <p class="photo-upload-heading">Please upload a copy of your Government Issued Photo ID below:</p>
+            <p class="photo-upload-warning">(Make sure the ID uploaded is visible and the information can be clearly read)</p>
+
+            <!-- Two dotted upload boxes matching screenshots -->
+            <div class="photo-upload-row">
+              <!-- Front of ID Box -->
+              <div class="upload-box-wrapper" [class.upload-error]="isFieldInvalid('step4_address_id', 'idFront')">
+                <div class="id-upload-box" (click)="frontFileInput.click()">
+                  <img [src]="idFrontPreview()" class="id-preview-img" *ngIf="idFrontPreview()" alt="Front ID Preview" />
+                  <div class="id-upload-placeholder" *ngIf="!idFrontPreview()">
+                    <span>Click here to upload Front of ID</span>
+                  </div>
+                </div>
+                <input type="file" #frontFileInput (change)="onIdFileSelected($event, 'front')" accept=".jpg,.jpeg,.png" style="display: none;" />
+                <p class="id-box-label">(Front of ID)</p>
+              </div>
+
+              <!-- Back of ID Box -->
+              <div class="upload-box-wrapper" [class.upload-error]="isFieldInvalid('step4_address_id', 'idBack')">
+                <div class="id-upload-box" (click)="backFileInput.click()">
+                  <img [src]="idBackPreview()" class="id-preview-img" *ngIf="idBackPreview()" alt="Back ID Preview" />
+                  <div class="id-upload-placeholder" *ngIf="!idBackPreview()">
+                    <span>Click here to upload Back of ID</span>
+                  </div>
+                </div>
+                <input type="file" #backFileInput (change)="onIdFileSelected($event, 'back')" accept=".jpg,.jpeg,.png" style="display: none;" />
+                <p class="id-box-label">(Back of ID)</p>
+              </div>
+            </div>
+
+            <!-- Allowed formats red subtitle -->
+            <p class="upload-formats-hint">(Allowed document formats are .jpg, .jpeg, .png)</p>
+
+            <!-- Red Help Link -->
+            <a href="javascript:void(0)" class="upload-help-link">Click here to view examples of proper upload or incorrect upload</a>
+
+            <!-- Top up selection Custom Radio Buttons -->
+            <div class="custom-radio-group">
+              <label class="custom-radio-label">
+                <input type="radio" formControlName="topUpOption" value="digital" style="display: none;" />
+                <span class="custom-radio-btn" [class.checked]="getFormValue('step4_address_id.topUpOption') === 'digital'"></span>
+                <span class="custom-radio-text">Opt for Digital top up and redemption via digital payment methods</span>
+              </label>
+              <label class="custom-radio-label">
+                <input type="radio" formControlName="topUpOption" value="retail" style="display: none;" />
+                <span class="custom-radio-btn" [class.checked]="getFormValue('step4_address_id.topUpOption') === 'retail'"></span>
+                <span class="custom-radio-text">Opt for cash in and cash out at retail stores</span>
+              </label>
+            </div>
+
           </div>
         </div>
 
-        <div class="card-buttons-group flex-buttons">
+        <!-- Scrollable bottom navigation buttons inside card -->
+        <div class="card-buttons-group flex-buttons" style="margin-top: 15px;">
           <button class="btn-cancel half-width" type="button" (click)="goBack()">Back</button>
           <button class="btn-primary half-width" type="button" (click)="saveAndContinue()">Save and Continue</button>
         </div>
@@ -826,53 +1015,77 @@
             </div>
           </div>
 
-          <!-- Step 3 Info -->
+          <!-- Step 3 Info (Account Security) -->
           <div class="review-section">
-            <h3 class="review-section-header">Address & Location</h3>
-            <div class="review-row">
-              <span class="review-label">Parish:</span>
-              <span class="review-value">{{ getFormValue('step3_address.parish') }}</span>
-            </div>
-            <div class="review-row">
-              <span class="review-label">Town:</span>
-              <span class="review-value">{{ getFormValue('step3_address.town') }}</span>
-            </div>
-            <div class="review-row">
-              <span class="review-label">District:</span>
-              <span class="review-value">{{ getFormValue('step3_address.district') }}</span>
-            </div>
-          </div>
-
-          <!-- Step 4 Info -->
-          <div class="review-section last-section">
-            <h3 class="review-section-header">Identification & Security</h3>
-            <div class="review-row">
-              <span class="review-label">Document Type:</span>
-              <span class="review-value">{{ getFormValue('step4_security.documentType') }}</span>
-            </div>
-            <div class="review-row">
-              <span class="review-label">TRN / Document Num:</span>
-              <span class="review-value">{{ getFormValue('step4_security.trnNumber') }}</span>
-            </div>
-            <div class="review-row">
-              <span class="review-label">Expiration Date:</span>
-              <span class="review-value">{{ getFormValue('step4_security.expirationDate') }}</span>
-            </div>
+            <h3 class="review-section-header">Account Security</h3>
             <div class="review-row">
               <span class="review-label">Security Question 1:</span>
-              <span class="review-value wrap-text">{{ getFormValue('step4_security.question1') }}</span>
+              <span class="review-value wrap-text">{{ getFormValue('step3_security.question1') }}</span>
             </div>
             <div class="review-row">
               <span class="review-label">Security Answer 1:</span>
-              <span class="review-value">{{ getFormValue('step4_security.answer1') }}</span>
+              <span class="review-value">{{ getFormValue('step3_security.answer1') }}</span>
             </div>
             <div class="review-row">
               <span class="review-label">Security Question 2:</span>
-              <span class="review-value wrap-text">{{ getFormValue('step4_security.question2') }}</span>
+              <span class="review-value wrap-text">{{ getFormValue('step3_security.question2') }}</span>
             </div>
             <div class="review-row">
               <span class="review-label">Security Answer 2:</span>
-              <span class="review-value">{{ getFormValue('step4_security.answer2') }}</span>
+              <span class="review-value">{{ getFormValue('step3_security.answer2') }}</span>
+            </div>
+            <div class="review-row">
+              <span class="review-label">Account PIN:</span>
+              <span class="review-value">••••</span>
+            </div>
+          </div>
+
+          <!-- Step 4 Info (Permanent Address & ID) -->
+          <div class="review-section last-section">
+            <h3 class="review-section-header">Address & Identification</h3>
+            <div class="review-row">
+              <span class="review-label">Street Address:</span>
+              <span class="review-value">{{ getFormValue('step4_address_id.streetAddress') }}</span>
+            </div>
+            <div class="review-row" *ngIf="getFormValue('step4_address_id.apartmentSuite') !== 'N/A'">
+              <span class="review-label">Apartment/Suite:</span>
+              <span class="review-value">{{ getFormValue('step4_address_id.apartmentSuite') }}</span>
+            </div>
+            <div class="review-row">
+              <span class="review-label">Parish:</span>
+              <span class="review-value">{{ getFormValue('step4_address_id.parish') }}</span>
+            </div>
+            <div class="review-row">
+              <span class="review-label">Town:</span>
+              <span class="review-value">{{ getFormValue('step4_address_id.town') }}</span>
+            </div>
+            <div class="review-row">
+              <span class="review-label">District:</span>
+              <span class="review-value">{{ getFormValue('step4_address_id.district') }}</span>
+            </div>
+            <div class="review-row">
+              <span class="review-label">Email Address:</span>
+              <span class="review-value">{{ getFormValue('step4_address_id.emailAddress') }}</span>
+            </div>
+            <div class="review-row">
+              <span class="review-label">TRN Number:</span>
+              <span class="review-value">{{ getFormValue('step4_address_id.trnNumber') }}</span>
+            </div>
+            <div class="review-row">
+              <span class="review-label">ID Type:</span>
+              <span class="review-value">{{ getFormValue('step4_address_id.idType') }}</span>
+            </div>
+            <div class="review-row">
+              <span class="review-label">ID Number:</span>
+              <span class="review-value">{{ getFormValue('step4_address_id.idNumber') }}</span>
+            </div>
+            <div class="review-row">
+              <span class="review-label">ID Expiration:</span>
+              <span class="review-value">{{ getFormValue('step4_address_id.expirationDate') }}</span>
+            </div>
+            <div class="review-row">
+              <span class="review-label">Top-up Choice:</span>
+              <span class="review-value" style="text-transform: capitalize;">{{ getFormValue('step4_address_id.topUpOption') }}</span>
             </div>
           </div>
         </div>
@@ -881,9 +1094,7 @@
           <button class="btn-cancel half-width" type="button" (click)="goBack()">Back</button>
           <button class="btn-primary half-width" type="button" (click)="submitRegistration()">Submit Registration</button>
         </div>
-      </div>
-
-      <!-- ============================================== -->
+      </div>      <!-- ============================================== -->
       <!-- STEP 5.1: REGISTRATION SUCCESS SCREEN          -->
       <!-- ============================================== -->
       <div *ngIf="currentStep() === 5" class="form-step-container success-step text-center">

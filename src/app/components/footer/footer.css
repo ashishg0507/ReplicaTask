@@ -80,7 +80,7 @@
 .footer-detail-line {
   font-size: 11px;
   color: #555555;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 1.5;
   text-align: center;
   margin: 0;
@@ -88,13 +88,13 @@
 }
 
 .footer-detail-line.font-medium {
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .footer-email-link {
   color: #000000;
   text-decoration: none;
-  font-weight: 600;
+  font-weight: 500;
   transition: color var(--transition-speed) ease;
 }
 

@@ -1,4 +1,4 @@
-import { Component, signal, OnInit, OnDestroy, computed } from '@angular/core';
+import { Component, signal, OnInit, OnDestroy, computed, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormGroup, FormsModule } from '@angular/forms';
 import { RegistrationService } from '../../registration.service';
@@ -53,6 +53,88 @@ export class Registration implements OnInit, OnDestroy {
   // Profile Picture base64 preview
   public profilePreview = signal<string>('');
 
+  // ID Card Front/Back base64 previews
+  public idFrontPreview = signal<string>('');
+  public idBackPreview = signal<string>('');
+
+  // Custom dropdown open states
+  public activeDropdowns = signal<{[key: string]: boolean}>({});
+
+  @HostListener('document:click', ['$event'])
+  public onDocumentClick(event: Event): void {
+    this.closeAllDropdowns();
+  }
+
+  public toggleDropdown(fieldName: string, event: Event): void {
+    event.stopPropagation();
+    const current = this.activeDropdowns();
+    const newState = !current[fieldName];
+    // Close other dropdowns
+    const updated: {[key: string]: boolean} = {};
+    updated[fieldName] = newState;
+    this.activeDropdowns.set(updated);
+  }
+
+  public isDropdownOpen(fieldName: string): boolean {
+    return !!this.activeDropdowns()[fieldName];
+  }
+
+  public closeAllDropdowns(): void {
+    this.activeDropdowns.set({});
+  }
+
+  public getSelectedDisplayValue(groupName: string, fieldName: string, placeholder: string = 'Select'): string {
+    const value = this.regService.regForm.get(`${groupName}.${fieldName}`)?.value;
+    if (value === undefined || value === null || value === '') return placeholder;
+    return value;
+  }
+
+  public selectOption(groupName: string, fieldName: string, value: string, event: Event): void {
+    event.stopPropagation();
+    const group = this.regService.regForm.get(groupName) as FormGroup;
+    group.get(fieldName)?.setValue(value);
+    group.get(fieldName)?.markAsTouched();
+
+    if (fieldName === 'parish') {
+      this.handleParishChangeManual(value);
+    } else if (fieldName === 'town') {
+      this.handleTownChangeManual(value);
+    }
+
+    this.closeAllDropdowns();
+  }
+
+  public handleParishChangeManual(selectedParishName: string): void {
+    const pForm = this.regService.regForm.get('step4_address_id') as FormGroup;
+    
+    // Clear downstream selections
+    pForm.patchValue({ town: '', district: '' });
+    this.townsList.set([]);
+    this.districtsList.set([]);
+
+    if (selectedParishName) {
+      const parish = this.parishesList().find(p => p.name === selectedParishName);
+      if (parish) {
+        this.townsList.set(parish.towns);
+      }
+    }
+  }
+
+  public handleTownChangeManual(selectedTownName: string): void {
+    const pForm = this.regService.regForm.get('step4_address_id') as FormGroup;
+    
+    // Clear downstream selection
+    pForm.patchValue({ district: '' });
+    this.districtsList.set([]);
+
+    if (selectedTownName) {
+      const town = this.townsList().find(t => t.name === selectedTownName);
+      if (town) {
+        this.districtsList.set(town.districts);
+      }
+    }
+  }
+
   constructor(public regService: RegistrationService) {}
 
   public ngOnInit(): void {
@@ -62,6 +144,16 @@ export class Registration implements OnInit, OnDestroy {
     const savedPic = this.regService.regForm.get('step2_personal.profilePicture')?.value;
     if (savedPic) {
       this.profilePreview.set(savedPic);
+    }
+
+    // Preserve ID Front/Back previews if already loaded
+    const savedFront = this.regService.regForm.get('step4_address_id.idFront')?.value;
+    if (savedFront) {
+      this.idFrontPreview.set(savedFront);
+    }
+    const savedBack = this.regService.regForm.get('step4_address_id.idBack')?.value;
+    if (savedBack) {
+      this.idBackPreview.set(savedBack);
     }
   }
 
@@ -85,7 +177,8 @@ export class Registration implements OnInit, OnDestroy {
 
   // Pre-fill dropdown lists if they have values already (from back navigation)
   private rehydrateAddressDropdowns(): void {
-    const pForm = this.regService.regForm.get('step3_address') as FormGroup;
+    const pForm = this.regService.regForm.get('step4_address_id') as FormGroup;
+    if (!pForm) return;
     const parish = pForm.get('parish')?.value;
     const town = pForm.get('town')?.value;
 
@@ -106,7 +199,7 @@ export class Registration implements OnInit, OnDestroy {
   // Triggered when Parish selection changes
   public onParishChange(event: Event): void {
     const selectedParishName = (event.target as HTMLSelectElement).value;
-    const pForm = this.regService.regForm.get('step3_address') as FormGroup;
+    const pForm = this.regService.regForm.get('step4_address_id') as FormGroup;
     
     // Clear downstream selections
     pForm.patchValue({ town: '', district: '' });
@@ -124,7 +217,7 @@ export class Registration implements OnInit, OnDestroy {
   // Triggered when Town selection changes
   public onTownChange(event: Event): void {
     const selectedTownName = (event.target as HTMLSelectElement).value;
-    const pForm = this.regService.regForm.get('step3_address') as FormGroup;
+    const pForm = this.regService.regForm.get('step4_address_id') as FormGroup;
     
     // Clear downstream selection
     pForm.patchValue({ district: '' });
@@ -146,9 +239,9 @@ export class Registration implements OnInit, OnDestroy {
     } else if (step === 1) {
       return this.regService.regForm.get('step2_personal') as FormGroup;
     } else if (step === 2) {
-      return this.regService.regForm.get('step3_address') as FormGroup;
+      return this.regService.regForm.get('step3_security') as FormGroup;
     } else if (step === 3) {
-      return this.regService.regForm.get('step4_security') as FormGroup;
+      return this.regService.regForm.get('step4_address_id') as FormGroup;
     }
     return this.regService.regForm;
   }
@@ -169,6 +262,7 @@ export class Registration implements OnInit, OnDestroy {
       if (firstError === 'underEighteen') return control.errors['underEighteen'];
       if (firstError === 'invalidTrn') return control.errors['invalidTrn'];
       if (firstError === 'notFutureDate') return control.errors['notFutureDate'];
+      if (firstError === 'email') return 'Please enter a valid email address.';
       if (firstError === 'pattern') {
         if (fieldName === 'verificationCode') return 'Verification code must be 6 digits.';
         if (fieldName === 'pin') return 'PIN must be exactly 4 digits.';
@@ -274,6 +368,33 @@ export class Registration implements OnInit, OnDestroy {
     }
   }
 
+  // ID Front & Back file uploaders
+  public onIdFileSelected(event: Event, side: 'front' | 'back'): void {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (file) {
+      const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+      if (!validTypes.includes(file.type)) {
+        alert('Allowed document formats are : jpg, jpeg, png');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        const base64String = reader.result as string;
+        if (side === 'front') {
+          this.idFrontPreview.set(base64String);
+          this.regService.regForm.get('step4_address_id.idFront')?.setValue(base64String);
+          this.regService.regForm.get('step4_address_id.idFront')?.markAsTouched();
+        } else {
+          this.idBackPreview.set(base64String);
+          this.regService.regForm.get('step4_address_id.idBack')?.setValue(base64String);
+          this.regService.regForm.get('step4_address_id.idBack')?.markAsTouched();
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
   // Navigation handlers
   public saveAndContinue(): void {
     const step = this.currentStep();
@@ -286,8 +407,8 @@ export class Registration implements OnInit, OnDestroy {
       this.showErrors.set(false);
       // Increment step
       this.currentStep.set(step + 1);
-      // Rehydrate lists if navigating into Address (Step 3)
-      if (this.currentStep() === 2) {
+      // Rehydrate lists if navigating into Permanent Address & ID (Step 4, which has step number 3)
+      if (this.currentStep() === 3) {
         this.rehydrateAddressDropdowns();
       }
     } else {
@@ -316,7 +437,7 @@ export class Registration implements OnInit, OnDestroy {
       this.currentStep.set(0.5);
     } else {
       this.currentStep.set(step - 1);
-      if (this.currentStep() === 2) {
+      if (this.currentStep() === 3) {
         this.rehydrateAddressDropdowns();
       }
     }
@@ -335,6 +456,8 @@ export class Registration implements OnInit, OnDestroy {
   public startOver(): void {
     this.regService.resetForm();
     this.profilePreview.set('');
+    this.idFrontPreview.set('');
+    this.idBackPreview.set('');
     this.currentStep.set(0);
     this.showErrors.set(false);
     this.otpSent.set(false);

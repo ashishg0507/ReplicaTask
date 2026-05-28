@@ -45,6 +45,7 @@ app-registration, app-footer {
 
 body {
   font-family: var(--font-family);
+  font-weight: 300; /* Beautiful global semilight weight */
   background-color: var(--bg-light);
   color: var(--gray-dark);
   min-height: 100vh;
@@ -62,6 +63,7 @@ a {
 
 button {
   font-family: var(--font-family);
+  font-weight: 300; /* Semilight buttons by default */
   cursor: pointer;
   border: none;
   outline: none;
@@ -82,19 +84,19 @@ button {
 
 .decor-striped-circle {
   position: absolute;
-  top: 50px;
-  left: -50px;
-  width: 250px;
-  height: 250px;
+  top: 10px;
+  left: -80px;
+  width: 300px;
+  height: 300px;
   background: repeating-linear-gradient(
-    -45deg,
-    #ffc799,
-    #ffc799 10px,
+    135deg,
+    #ffd1a9,
+    #ffd1a9 10px,
     transparent 10px,
-    transparent 20px
+    transparent 24px
   );
   border-radius: 50%;
-  opacity: 0.45;
+  opacity: 0.9;
 }
 
 .decor-green-circle-1 {
@@ -188,11 +190,17 @@ button {
   background: var(--bg-card);
   padding: 0 6px;
   font-size: 13px;
-  color: var(--primary-green);
-  font-weight: 500;
+  color: #64748b; /* Sleek cool gray for inactive label state */
+  font-weight: 300; /* Thin label weight */
   z-index: 2;
   pointer-events: none;
   transition: all var(--transition-speed) ease;
+}
+
+/* Beautiful focused notch style using focus-within */
+.floating-input-group:focus-within label {
+  color: var(--primary-green) !important;
+  font-weight: 400; /* Slight focus definition */
 }
 
 .floating-input-group input,
@@ -202,7 +210,8 @@ button {
   font-size: 15px;
   font-family: var(--font-family);
   color: var(--gray-dark);
-  border: 1.5px solid var(--border-light);
+  font-weight: 300; /* Thin input value weight */
+  border: 1.5px solid #cbd5e1;
   border-radius: var(--border-radius);
   background-color: var(--bg-card);
   outline: none;
@@ -231,6 +240,7 @@ button {
 /* Validation Error state for floating input fields */
 .floating-input-group.has-error label {
   color: var(--error-color) !important;
+  font-weight: 300;
 }
 
 .floating-input-group.has-error input,
@@ -245,7 +255,7 @@ button {
   display: flex;
   align-items: center;
   gap: 4px;
-  font-weight: 500;
+  font-weight: 300; /* Thin weight for error */
   text-align: left;
 }
 
@@ -259,7 +269,7 @@ button {
   color: #ffffff;
   padding: 13px 28px;
   font-size: 15px;
-  font-weight: 500;
+  font-weight: 300; /* Thin button text */
   border-radius: var(--border-radius);
   display: inline-flex;
   align-items: center;
@@ -281,7 +291,7 @@ button {
   color: #ffffff;
   padding: 13px 28px;
   font-size: 15px;
-  font-weight: 500;
+  font-weight: 300; /* Thin button text */
   border-radius: var(--border-radius);
   display: inline-flex;
   align-items: center;
@@ -298,7 +308,7 @@ button {
   color: #ffffff;
   padding: 13px 28px;
   font-size: 15px;
-  font-weight: 500;
+  font-weight: 300; /* Thin button text */
   border-radius: var(--border-radius);
   display: inline-flex;
   align-items: center;
@@ -316,7 +326,7 @@ button {
   color: var(--primary-orange);
   padding: 13px 28px;
   font-size: 15px;
-  font-weight: 500;
+  font-weight: 300; /* Thin button text */
   border-radius: var(--border-radius);
   display: inline-flex;
   align-items: center;
@@ -335,12 +345,13 @@ button {
   right: 20px;
   width: 50px;
   height: 50px;
-  background-color: #00e676;
+  background-color: #00c853;
   border-radius: 50%;
+  border: 2.5px solid #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 15px rgba(0, 230, 118, 0.3);
+  box-shadow: 0 4px 15px rgba(0, 200, 83, 0.4);
   z-index: 999;
   cursor: pointer;
   transition: transform var(--transition-speed) ease;
@@ -348,4 +359,77 @@ button {
 
 .chat-widget-trigger:hover {
   transform: scale(1.08);
+}
+
+/* Custom Select Dropdown styles */
+.custom-select-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.custom-select-trigger {
+  width: 100%;
+  padding: 14px 16px;
+  font-size: 15px;
+  font-family: var(--font-family);
+  color: var(--gray-dark);
+  font-weight: 400;
+  border: 1.5px solid #cbd5e1;
+  border-radius: var(--border-radius);
+  background-color: var(--bg-card);
+  outline: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  user-select: none;
+  transition: border-color var(--transition-speed) ease;
+  min-height: 51px;
+}
+
+.floating-input-group:focus-within .custom-select-trigger,
+.custom-select-trigger.open {
+  border-color: var(--primary-green);
+}
+
+.floating-input-group.has-error .custom-select-trigger {
+  border-color: var(--error-bg-border) !important;
+}
+
+.custom-arrow {
+  font-size: 11px;
+  color: #666666;
+  transition: transform 0.2s ease;
+}
+
+.custom-select-trigger.open .custom-arrow {
+  transform: rotate(180deg);
+}
+
+.custom-select-options {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  width: 100%;
+  background-color: #ffffff;
+  border: 1px solid #777777; /* Thin dark grey border like screenshot */
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.custom-select-option {
+  padding: 10px 16px;
+  font-size: 15px;
+  color: #333333;
+  cursor: pointer;
+  user-select: none;
+  text-align: left;
+}
+
+.custom-select-option:hover {
+  background-color: #6d6b6b; /* Greyish / brownish background on hover matching screenshot */
+  color: #ffffff; /* White text on hover */
 }

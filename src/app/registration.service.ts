@@ -45,15 +45,7 @@ export class RegistrationService {
         countryOfBirth: ['', Validators.required],
         nationality: ['', Validators.required]
       }),
-      step3_address: this.fb.group({
-        parish: ['', Validators.required],
-        town: ['', Validators.required],
-        district: ['', Validators.required]
-      }),
-      step4_security: this.fb.group({
-        documentType: ['TRN', Validators.required],
-        trnNumber: ['', [Validators.required, this.trnValidator()]],
-        expirationDate: ['', [Validators.required, this.futureDateValidator()]],
+      step3_security: this.fb.group({
         question1: ['', Validators.required],
         answer1: ['', Validators.required],
         question2: ['', Validators.required],
@@ -62,6 +54,21 @@ export class RegistrationService {
         confirmPin: ['', Validators.required]
       }, {
         validators: [this.pinMatchValidator(), this.distinctQuestionsValidator()]
+      }),
+      step4_address_id: this.fb.group({
+        streetAddress: ['', Validators.required],
+        apartmentSuite: [''],
+        parish: ['', Validators.required],
+        town: ['', Validators.required],
+        district: ['', Validators.required],
+        emailAddress: ['', [Validators.required, Validators.email]],
+        trnNumber: ['', [Validators.required, this.trnValidator()]],
+        idType: ['', Validators.required],
+        idNumber: ['', Validators.required],
+        expirationDate: ['', [Validators.required, this.futureDateValidator()]],
+        idFront: ['', Validators.required], // base64 string
+        idBack: ['', Validators.required], // base64 string
+        topUpOption: ['digital', Validators.required] // digital or retail
       })
     });
   }
@@ -222,21 +229,28 @@ export class RegistrationService {
         countryOfBirth: '',
         nationality: ''
       },
-      step3_address: {
-        parish: '',
-        town: '',
-        district: ''
-      },
-      step4_security: {
-        documentType: 'TRN',
-        trnNumber: '',
-        expirationDate: '',
+      step3_security: {
         question1: '',
         answer1: '',
         question2: '',
         answer2: '',
         pin: '',
         confirmPin: ''
+      },
+      step4_address_id: {
+        streetAddress: '',
+        apartmentSuite: '',
+        parish: '',
+        town: '',
+        district: '',
+        emailAddress: '',
+        trnNumber: '',
+        idType: '',
+        idNumber: '',
+        expirationDate: '',
+        idFront: '',
+        idBack: '',
+        topUpOption: 'digital'
       }
     });
   }

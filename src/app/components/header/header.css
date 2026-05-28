@@ -132,7 +132,7 @@
 .btn-login {
   background-color: var(--primary-orange);
   color: #ffffff;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 14.5px;
   padding: 10px 24px;
   border-radius: 6px;
@@ -147,7 +147,7 @@
 .btn-register {
   background-color: var(--primary-green);
   color: #ffffff;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 14.5px;
   padding: 10px 24px;
   border-radius: 6px;
@@ -162,7 +162,7 @@
 .btn-download {
   background-color: var(--primary-blue);
   color: #ffffff;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 14.5px;
   padding: 10px 24px;
   border-radius: 6px;
